@@ -1,7 +1,4 @@
-import * as main from "./SeacoScript.js";
-import * as myMath from "./Math Functions.js";
-import * as objects from "./Objects.js";
-import * as UI from "./UI-management.js";
+import "./node_modules/howler/dist/howler.min.js";
 
 export let soundOn = true;
 

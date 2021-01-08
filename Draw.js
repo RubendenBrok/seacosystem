@@ -1,7 +1,7 @@
 import * as main from "./SeacoScript.js";
-import * as myMath from "./Math Functions.js";
 import * as objects from "./Objects.js";
 import * as UI from "./UI-management.js";
+import * as PIXI from './node_modules/pixi.js/dist/pixi.js'
 
 export const spriteArr = [];
 
@@ -11,18 +11,14 @@ let fishTank;
 const menuColor = 0xcdffc8;
 const backgroundColor = 0x332255;
 //const backgroundColor = 0x2d2947;
-const selectionFadeTime = 12;
-let selectionOpacity = 0;
+
 
 let placeFish1Sprite;
 let placeFish2Sprite;
 
 //export function PixiInit() {
   //Aliases
-let Application = PIXI.Application,
-  loader = PIXI.loader,
-  resources = PIXI.loader.resources,
-  Sprite = PIXI.Sprite;
+  let Sprite = PIXI.Sprite;
 
   let graphics;
   let background;
@@ -37,7 +33,7 @@ let Application = PIXI.Application,
 
 export function pixiInit() {
   //Create a Pixi Application
-    app = new Application({
+    app = new PIXI.Application({
     width: window.innerWidth,
     height: window.innerHeight,
     antialias: true,
@@ -74,7 +70,6 @@ export function pixiInit() {
     .add("fish1baby","vis1baby.png")
     .add("fish2","vis2rechts.png")
     .add("fish2baby","vis2baby.png")
-    .add("plankton","plankton1.png")
     .add("heart","hartje.png")
     .add("deadfish1","Visgraat1.png")
     .add("deadfish2","Visgraat2.png")
@@ -99,6 +94,7 @@ export function createHoverSprites(){
 }
 
 export function initializeFilters(){
+  /*
   displacementSprite = new PIXI.Sprite.from(app.loader.resources.cloudtexture.texture);
   displacementSprite.scale.x = 2.5;
   displacementSprite.scale.y = 2.5;
@@ -126,6 +122,7 @@ export function initializeFilters(){
   adjustmentFilter.saturation = 1.3;
   
   app.stage.filters = [CRTFilter, adjustmentFilter];
+  */
 }
 
 export function createSprite(spriteName, id, x, y, angle, color){

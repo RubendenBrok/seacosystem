@@ -1,0 +1,24 @@
+{
+  "name": "seacosystem",
+  "version": "1.0.0",
+  "description": "Seacosystem is an online app/game that lets you play with an underwater ecosystem",
+  "main": "Draw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RubendenBrok/seacosystem.git"
+  },
+  "author": "Ruben den Brok",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RubendenBrok/seacosystem/issues"
+  },
+  "homepage": "https://github.com/RubendenBrok/seacosystem#readme",
+  "dependencies": {
+    "howler": "^2.2.1",
+    "pixi-filters": "^3.2.2",
+    "pixi.js": "^5.3.7"
+  }
+}
