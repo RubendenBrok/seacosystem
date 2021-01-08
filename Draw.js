@@ -1,7 +1,7 @@
 import * as main from "./SeacoScript.js";
 import * as objects from "./Objects.js";
 import * as UI from "./UI-management.js";
-import * as PIXI from './node_modules/pixi.js/dist/pixi.js'
+import { Application, Sprite, Graphics, Container } from 'pixi.js'
 
 export const spriteArr = [];
 
@@ -18,7 +18,6 @@ let placeFish2Sprite;
 
 //export function PixiInit() {
   //Aliases
-  let Sprite = PIXI.Sprite;
 
   let graphics;
   let background;
@@ -33,7 +32,7 @@ let placeFish2Sprite;
 
 export function pixiInit() {
   //Create a Pixi Application
-    app = new PIXI.Application({
+    app = new Application({
     width: window.innerWidth,
     height: window.innerHeight,
     antialias: true,
@@ -44,23 +43,23 @@ export function pixiInit() {
 
   document.body.appendChild(app.view);
 
-  background = new PIXI.Graphics()
+  background = new Graphics()
   app.stage.addChild(background);
   background.beginFill(backgroundColor);
   background.drawRect(0,0,main.screenWidth, main.screenHeight);
   background.endFill();
 
 
-  fishTank = new PIXI.Container();
+  fishTank = new Container();
   app.stage.addChild(fishTank);
 
-  graphics = new PIXI.Graphics()
+  graphics = new Graphics()
   app.stage.addChild(graphics);
 
-  selectionDarkness = new PIXI.Graphics();
+  selectionDarkness = new Graphics();
   app.stage.addChild(selectionDarkness);
 
-  selectionMask = new PIXI.Graphics()
+  selectionMask = new Graphics()
   app.stage.addChild(selectionMask);
   selectionMask.isMask = true;
 
@@ -83,8 +82,8 @@ export function pixiInit() {
 };
 
 export function createHoverSprites(){
-  placeFish1Sprite = new PIXI.Sprite.from(app.loader.resources.addfish1.texture)
-  placeFish2Sprite = new PIXI.Sprite.from(app.loader.resources.addfish2.texture)
+  placeFish1Sprite = new Sprite.from(app.loader.resources.addfish1.texture)
+  placeFish2Sprite = new Sprite.from(app.loader.resources.addfish2.texture)
   app.stage.addChild(placeFish1Sprite);
   app.stage.addChild(placeFish2Sprite);
   placeFish1Sprite.anchor.set(0.5);
@@ -95,7 +94,7 @@ export function createHoverSprites(){
 
 export function initializeFilters(){
   /*
-  displacementSprite = new PIXI.Sprite.from(app.loader.resources.cloudtexture.texture);
+  displacementSprite = new Sprite.from(app.loader.resources.cloudtexture.texture);
   displacementSprite.scale.x = 2.5;
   displacementSprite.scale.y = 2.5;
 
