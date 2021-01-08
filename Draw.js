@@ -1,7 +1,9 @@
 import * as main from "./SeacoScript.js";
 import * as objects from "./Objects.js";
 import * as UI from "./UI-management.js";
-import { Application, Sprite, Graphics, Container } from 'pixi.js'
+import { Application, Sprite, Graphics, Container, Texture, filters, WRAP_MODES} from 'pixi.js'
+//import * as PIXI from 'pixi.js'
+import { CRTFilter, AdjustmentFilter } from 'pixi-filters'
 
 export const spriteArr = [];
 
@@ -16,18 +18,15 @@ const backgroundColor = 0x332255;
 let placeFish1Sprite;
 let placeFish2Sprite;
 
-//export function PixiInit() {
-  //Aliases
 
-  let graphics;
-  let background;
-  let selectionDarkness;
-  let selectionMask;
-
-  let displacementSprite;
-  let displacementFilter;
-  let CRTFilter;
-  let adjustmentFilter;
+let graphics;
+let background;
+let selectionDarkness;
+let selectionMask;
+let displacementSprite;
+let displacementFilter;
+let vintageFilter;
+let adjustmentFilter;
 
 
 export function pixiInit() {
@@ -48,7 +47,6 @@ export function pixiInit() {
   background.beginFill(backgroundColor);
   background.drawRect(0,0,main.screenWidth, main.screenHeight);
   background.endFill();
-
 
   fishTank = new Container();
   app.stage.addChild(fishTank);
@@ -93,26 +91,26 @@ export function createHoverSprites(){
 }
 
 export function initializeFilters(){
-  /*
+  console.log(app.loader.resources.cloudtexture.texture)
   displacementSprite = new Sprite.from(app.loader.resources.cloudtexture.texture);
   displacementSprite.scale.x = 2.5;
   displacementSprite.scale.y = 2.5;
 
-  displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite);
-  displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+  displacementFilter = new filters.DisplacementFilter(displacementSprite);
+  displacementSprite.texture.baseTexture.wrapMode = WRAP_MODES.REPEAT;
   fishTank.addChild(displacementSprite);
   fishTank.filters = [displacementFilter];
 
-  CRTFilter = new PIXI.filters.CRTFilter();
-  CRTFilter.curvature = 2;
-  CRTFilter.lineWidth = 20;
-  CRTFilter.lineContrast= 0.01
-  CRTFilter.vignettingAlpha = 0.6;
-  CRTFilter.noise = 0
-  CRTFilter.noiseSize = 1;
-  CRTFilter.seed = 1;
+  vintageFilter = new CRTFilter();
+  vintageFilter.curvature = 2;
+  vintageFilter.lineWidth = 20;
+  vintageFilter.lineContrast= 0.01
+  vintageFilter.vignettingAlpha = 0.6;
+  vintageFilter.noise = 0
+  vintageFilter.noiseSize = 1;
+  vintageFilter.seed = 1;
 
-  adjustmentFilter = new PIXI.filters.AdjustmentFilter();
+  adjustmentFilter = new AdjustmentFilter();
   adjustmentFilter.blue = 1.05;
   adjustmentFilter.green = 1;
   adjustmentFilter.red = 0.95;
@@ -120,8 +118,7 @@ export function initializeFilters(){
   adjustmentFilter.gamma =1.3;
   adjustmentFilter.saturation = 1.3;
   
-  app.stage.filters = [CRTFilter, adjustmentFilter];
-  */
+  app.stage.filters = [vintageFilter, adjustmentFilter];
 }
 
 export function createSprite(spriteName, id, x, y, angle, color){
@@ -132,6 +129,7 @@ export function createSprite(spriteName, id, x, y, angle, color){
     animation : {
     }
   })
+  console.log(spriteArr[spriteArr.length-1])
   //initialize the new sprite to its position and rotation
   spriteArr[spriteArr.length-1].sprite.position.set(x, y);
   spriteArr[spriteArr.length-1].sprite.anchor.set(0.5);
@@ -184,7 +182,7 @@ export function deleteSprite(id, isText){
 export function createText(textStr, id, x, y){
   //push new sprite into array
   spriteArr.push({
-    sprite : new PIXI.Text(textStr),
+    sprite : new Text(textStr),
     id : id
   })
   spriteArr[spriteArr.length-1].sprite.style.fontSize = '15px';
@@ -235,9 +233,9 @@ export function updateDisplacementFilter(){
     displacementSprite.x += 0.5;
     displacementSprite.y += 0.2;
   }
-  CRTFilter.time += 0.1;
-  CRTFilter.seed += 10;
-  if (CRTFilter.seed > 200){CRTFilter.seed = 1}; 
+  vintageFilter.time += 0.1;
+  vintageFilter.seed += 10;
+  if (vintageFilter.seed > 200){vintageFilter.seed = 1}; 
 }
 
 export function drawBlueOverlay(){
