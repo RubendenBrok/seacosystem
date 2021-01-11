@@ -1,7 +1,7 @@
 import * as main from "./SeacoScript.js";
 import * as objects from "./Objects.js";
 import * as UI from "./UI-management.js";
-import { Application, Sprite, Graphics, Container, Texture, filters, WRAP_MODES} from 'pixi.js'
+import { Application, Sprite, Graphics, Container, Texture, filters, WRAP_MODES, Text} from 'pixi.js'
 //import * as PIXI from 'pixi.js'
 import { CRTFilter, AdjustmentFilter } from 'pixi-filters'
 
@@ -60,8 +60,9 @@ export function pixiInit() {
   selectionMask = new Graphics()
   app.stage.addChild(selectionMask);
   selectionMask.isMask = true;
+  
 
-  app.loader.baseUrl = "sprites"
+  //app.loader.baseUrl = "sprites"
   app.loader 
     .add("fish1","nieuwevis1.png")
     .add("fish1baby","vis1baby.png")
@@ -129,7 +130,6 @@ export function createSprite(spriteName, id, x, y, angle, color){
     animation : {
     }
   })
-  console.log(spriteArr[spriteArr.length-1])
   //initialize the new sprite to its position and rotation
   spriteArr[spriteArr.length-1].sprite.position.set(x, y);
   spriteArr[spriteArr.length-1].sprite.anchor.set(0.5);

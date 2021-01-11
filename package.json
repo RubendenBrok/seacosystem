@@ -4,7 +4,7 @@
     "description": "Seacosystem is an online app/game that lets you play with an underwater ecosystem",
     "main": "Draw.js",
     "scripts": {
-        "start": "parcel Home.html"
+        "start": "parcel Home.html data/**/*"
     },
     "repository": {
         "type": "git",
