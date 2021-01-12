@@ -2,7 +2,7 @@
 // MATH FUNCTIONS //
 ////////////////////
 
-import { main } from "./SeacoScript.js";
+import {screenHeight, screenWidth} from "./SeacoScript.js";
 
 export var randomSineList = [];
 
@@ -22,8 +22,8 @@ export function dist(x1, y1, x2, y2) {
   var dx = Math.abs(x2 - x1);
   var dy = Math.abs(y2 - y1);
 
-  if (dx > main.screenWidth / 2){dx = main.screenWidth - dx}
-  if (dy > main.screenWidth / 2){dy = main.screenWidth - dy}
+  if (dx > screenWidth / 2){dx = screenWidth - dx}
+  if (dy > screenHeight / 2){dy = screenHeight - dy}
 
   return Math.sqrt(dx * dx + dy * dy);
 }
@@ -73,10 +73,10 @@ export function getAngleBetweenPoints(inx1, iny1, inx2, iny2){
   x2 = inx2,
   y1 = iny1,
   y2= iny2;
-  if (x1 - x2 > main.screenWidth / 2){x2 += main.screenWidth};
-  if (x2 - x1 > main.screenWidth / 2){x1 += main.screenWidth};
-  if (y1 - y2 > main.screenHeight / 2){y2 += main.screenHeight};
-  if (y2 - y1 > main.screenHeight / 2){y1 += main.screenHeight};
+  if (x1 - x2 > screenWidth / 2){x2 += screenWidth};
+  if (x2 - x1 > screenWidth / 2){x1 += screenWidth};
+  if (y1 - y2 > screenHeight / 2){y2 += screenHeight};
+  if (y2 - y1 > screenHeight / 2){y1 += screenHeight};
   return Math.atan2(y2-y1, x2-x1)
 }
 

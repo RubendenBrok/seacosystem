@@ -1,8 +1,7 @@
-import * as main from "./SeacoScript.js";
-import * as objects from "./Objects.js";
-import * as UI from "./UI-management.js";
+import {main, screenHeight, screenWidth} from "./SeacoScript.js";
+import {fishArr, plantsArr} from "./Objects.js";
+import {hover, canPlaceFish, placingFish, animationSpeed, mouseX, mouseY} from "./UI-management.js";
 import { Application, Sprite, Graphics, Container, Texture, filters, WRAP_MODES, Text} from 'pixi.js'
-//import * as PIXI from 'pixi.js'
 import { CRTFilter, AdjustmentFilter } from 'pixi-filters'
 
 export const spriteArr = [];
@@ -45,7 +44,7 @@ export function pixiInit() {
   background = new Graphics()
   app.stage.addChild(background);
   background.beginFill(backgroundColor);
-  background.drawRect(0,0,main.screenWidth, main.screenHeight);
+  background.drawRect(0,0,screenWidth, screenHeight);
   background.endFill();
 
   fishTank = new Container();
@@ -77,7 +76,7 @@ export function pixiInit() {
     .add("addfish1","addfish1.png")
     .add("addfish2","addfish2.png");
 
-  app.loader.load(main.main);
+  app.loader.load(main);
 };
 
 export function createHoverSprites(){
@@ -196,22 +195,22 @@ export function createText(textStr, id, x, y){
 
 export function drawHover() {
   //draw a circle over a fish when you hover over it
-  if (UI.hover.index >= 0){
-    if (typeof(objects.fishArr[UI.hover.index]) !== "undefined"){
+  if (hover.index >= 0){
+    if (typeof(fishArr[hover.index]) !== "undefined"){
       graphics.beginFill(menuColor, 0.1);
-      graphics.drawCircle(objects.fishArr[UI.hover.index].x, objects.fishArr[UI.hover.index].y, objects.fishArr[UI.hover.index].size * 1.2, 0.7);
+      graphics.drawCircle(fishArr[hover.index].x, fishArr[hover.index].y, fishArr[hover.index].size * 1.2, 0.7);
       graphics.endFill();
     }
   }
   //move the place a fish sprite to mouse position when the user is placing a fish
-  if (UI.canPlaceFish){
-    if (UI.placingFish == 0){
-      placeFish1Sprite.position.set(UI.mouseX, UI.mouseY);
+  if (canPlaceFish){
+    if (placingFish == 0){
+      placeFish1Sprite.position.set(mouseX, mouseY);
     } else {
       placeFish1Sprite.position.set(-100,-100);
     }
-    if (UI.placingFish == 1){
-      placeFish2Sprite.position.set(UI.mouseX, UI.mouseY);
+    if (placingFish == 1){
+      placeFish2Sprite.position.set(mouseX, mouseY);
     } else {
       placeFish2Sprite.position.set(-100,-100);
     }
@@ -229,7 +228,7 @@ export function drawSelection(x, y, vision, size){
 }
 
 export function updateDisplacementFilter(){
-  if (UI.animationSpeed > 0){
+  if (animationSpeed > 0){
     displacementSprite.x += 0.5;
     displacementSprite.y += 0.2;
   }
@@ -240,13 +239,13 @@ export function updateDisplacementFilter(){
 
 export function drawBlueOverlay(){
   graphics.beginFill(backgroundColor, 0.3);
-  graphics.drawRect(0, 0, main.screenWidth, main.screenHeight);
+  graphics.drawRect(0, 0, screenWidth, screenHeight);
   graphics.endFill();
 }
 
 export function drawSelectionDarkness(x, y, vision){
   selectionDarkness.beginFill(0x000000, 0.4);
-  selectionDarkness.drawRect(0, 0, main.screenWidth, main.screenHeight);
+  selectionDarkness.drawRect(0, 0, screenWidth, screenHeight);
   selectionDarkness.endFill();
 
   selectionMask.clear();
@@ -265,7 +264,7 @@ export function drawPlants() {
   graphics.clear();
 
   //graphics.beginFill(0x88DD11);
-  objects.plantsArr.forEach((plant) => {
+  plantsArr.forEach((plant) => {
     let plantHexColor = RGBToHexColor([plant.RColor, plant.GColor, plant.BColor])
     graphics.beginFill(plantHexColor);
     graphics.drawCircle(plant.x, plant.y, plant.size);
@@ -278,7 +277,7 @@ export function drawPlants() {
     app.renderer.resize(w,h);
     background.clear();
     background.beginFill(0x332255);
-    background.drawRect(0,0,main.screenWidth, main.screenHeight);
+    background.drawRect(0,0,screenWidth, screenHeight);
     background.endFill();
   }
 

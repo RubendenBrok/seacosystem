@@ -1,4 +1,4 @@
-import "./node_modules/howler/dist/howler.min.js";
+import {Howl, Howler} from "howler";
 
 export let soundOn = true;
 

@@ -369,8 +369,8 @@ $("#killallfish").click(()=>{
 })
 
 //toggle the place a fish menus
-$("#1.fishbutton").click(()=>{
-  $("#1.fishstats").toggle(300);
+$("#placeherringbutton").click(()=>{
+  $("#herringstats").toggle(300);
   $("#selectionbox").slideUp(300, function () {
     selection.selected = false;
   });
@@ -384,7 +384,7 @@ $("#1.fishbutton").click(()=>{
       placingFish = -1;
       break;
     case 1:
-      $("#2.fishstats").toggle(300);
+      $("#codstats").toggle(300);
       sound.playSound(0);
       placingFish = 0;
       break;
@@ -400,8 +400,8 @@ $("#1.fishbutton").click(()=>{
     $("#options").fadeOut(200);
   }
 })
-$("#2.fishbutton").click(()=>{
-  $("#2.fishstats").toggle(300);
+$("#placecodbutton").click(()=>{
+  $("#codstats").toggle(300);
   $("#selectionbox").slideUp(300, function () {
     selection.selected = false;
   });
@@ -411,7 +411,7 @@ $("#2.fishbutton").click(()=>{
       placingFish = 1;
       break;
     case 0:
-      $("#1.fishstats").toggle(300);
+      $("#herringstats").toggle(300);
       sound.playSound(0);
       placingFish = 1;
       break;
@@ -467,13 +467,10 @@ function updateSelectionBox(){
   $("#selectionboxtext").html(
     "<h3><b>"+selection.name.toUpperCase()+"</b></h3>"+
     "<p>Food: "+Math.round(selection.food * 10) / 10+"</p>"+
-   // "<p>ID: "+selection.id+"</p>"+
     "<p>Speed: "+Math.round(selection.speed * 10) / 10+"</p>"+
     "<p>Visual Range: "+Math.round(selection.vision)+"</p>"+
     "<p>Reaction Time: "+Math.round(selection.actionTime)+"</p>"+
     "<p>Generation: "+(selection.generation + 1)+"</p>"+
-  //  "<p>X: "+Math.floor(selection.x)+"</p>"+
-  //  "<p>Y: "+Math.floor(selection.y)+"</p></div>"+
     "<p><b><br><i>"+selection.currentBehaviour+"</i></b></p>")
   }
 

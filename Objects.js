@@ -1,10 +1,8 @@
-import * as main from "./SeacoScript.js";
-import * as myMath from "./Math Functions.js";
-import * as UI from "./UI-management.js";
-import * as draw from "./Draw.js";
-import * as FX from "./FX.js";
-import * as sound from "./sound.js";
-
+import {screenWidth, screenHeight, friction} from "./SeacoScript.js";
+import {random, getVectorComponents, modAbs, getAngleBetweenPoints, dist} from "./Math Functions.js";
+import {fishColors, spawnRate, mutationChance, mutationAmount, colorEvolution, herringFoodWhenFull, herringFoodWhenHungry, herringActionTime, codFoodWhenFull, codFoodWhenHungry, codActionTime, selection, updateSelection, herringSpeed, herringVision, codSpeed, codVision} from "./UI-management.js";
+import {createSprite, deleteSprite} from "./Draw.js";
+import {createBloodCloud, createBubbles, createTemporaryObject} from "./FX.js";
 
 export let numOfElementsCreated = 0;
 
@@ -26,10 +24,6 @@ foodValue : 2
 }
 
 const pi = Math.PI;
-
-let colorEvolution = 20;
-let mutationChance = 0.4;
-let mutationAmount = 0.4;
 
 export let frameCounter = 0;
 export function updateFrameCounter() {frameCounter++;};
@@ -103,7 +97,7 @@ export const protoFish = [
     eatTime: 10,
     hungerMultiplier: 1,
     animationMultiplier: 1.2,
-    bubbleAmtWhenEats: function(){return 1 + myMath.random(2)},
+    bubbleAmtWhenEats: function(){return 1 + random(2)},
   },
   {
     maxSpeed: 2.0,
@@ -135,7 +129,7 @@ export const protoFish = [
     eatTime: 20,
     hungerMultiplier: 0.4,
     animationMultiplier: 0.6,
-    bubbleAmtWhenEats: function(){return 5 + myMath.random(10)},
+    bubbleAmtWhenEats: function(){return 5 + random(10)},
   }
 ];
 
@@ -166,7 +160,7 @@ export function plant(
   color
 ) {
   seaObject.call(this, x, y, speed, currentAngle, size);
-  this.reproduceRate = reproduceRate + myMath.random(reproduceRate);
+  this.reproduceRate = reproduceRate + random(reproduceRate);
   this.reproduceChance = reproduceChance;
   this.wobbleAmt = wobbleAmt;
   this.RColor = protoPlant.startColor[0];
@@ -202,7 +196,7 @@ export function fish(x, y, currentAngle, spriteName, actionTime, maxSpeed, rando
   //create a sprite for the fish
   this.spriteName = spriteName;
   this.id = numOfElementsCreated;
-  draw.createSprite(spriteName, this.id, this.x, this.y, this.currentAngle, colorArr, protoFish[species].colorDepth);
+  createSprite(spriteName, this.id, this.x, this.y, this.currentAngle, colorArr, protoFish[species].colorDepth);
   numOfElementsCreated++;
 
   //other variables used by the movement and behaviour functions
@@ -221,7 +215,7 @@ export function fish(x, y, currentAngle, spriteName, actionTime, maxSpeed, rando
 //plant update cycle
 export function updatePlants() {
   if (frameCounter % protoPlant.spawnRate === 0){
-    createPlants(1, myMath.random(main.screenWidth), myMath.random(main.screenHeight));
+    createPlants(1, random(screenWidth), random(screenHeight));
   }
   plantsArr.forEach((plant, index) => {
     //movement
@@ -274,10 +268,10 @@ export function updateFish() {
       if (thisfish.framesTillAdult == 0){
         fishArr.push(new fish(thisfish.x, thisfish.y, thisfish.currentAngle, protoFish[thisfish.species].spriteName, thisfish.actionTime, thisfish.maxSpeed, thisfish.randomSwingAngle, thisfish.vision, thisfish.turnSpeed, true, thisfish.species, thisfish.generation, thisfish.colorArr))
         //if the babyfish was selected update selection to the adult
-        if (UI.selection.id == thisfish.id){
-          UI.updateSelection(numOfElementsCreated - 1, protoFish[thisfish.species].spriteName, true)
+        if (selection.id == thisfish.id){
+          updateSelection(numOfElementsCreated - 1, protoFish[thisfish.species].spriteName, true)
         }
-        draw.deleteSprite(thisfish.id)
+        deleteSprite(thisfish.id)
         fishArr.splice(index, 1);
       }
     }
@@ -315,22 +309,22 @@ function moveFish(fish) {
       if (fish.turnCounter == fish.turnSpeed) {
         fish.currentAngle = fish.targetAngle;
         fish.speed = fish.maxSpeed;
-        fish.nextAction = frameCounter + fish.actionTime + myMath.random(fish.actionTime);
+        fish.nextAction = frameCounter + fish.actionTime + random(fish.actionTime);
         setFishAnimation(fish);
         fish.turnCounter = 0;
       }
     }
   }
   //update the fish position
-  fish.speed *= main.friction;
+  fish.speed *= friction;
   fish.currentFood -= (0.002 * protoFish[fish.species].hungerMultiplier) +(fish.maxSpeed * 0.004 * protoFish[fish.species].hungerMultiplier);
 
-  let dx = myMath.getVectorComponents(fish.currentAngle, fish.speed)[0];
-  let dy = myMath.getVectorComponents(fish.currentAngle, fish.speed)[1];
+  let dx = getVectorComponents(fish.currentAngle, fish.speed)[0];
+  let dy = getVectorComponents(fish.currentAngle, fish.speed)[1];
   fish.x += dx;
   fish.y += dy;
-  fish.x = myMath.modAbs(fish.x, main.screenWidth);
-  fish.y = myMath.modAbs(fish.y, main.screenHeight);
+  fish.x = modAbs(fish.x, screenWidth);
+  fish.y = modAbs(fish.y, screenHeight);
 
   updateFishAnimation(fish);
 }
@@ -341,13 +335,13 @@ function fishBehaviour(fish){
   let enemyArr = protoFish[fish.species].enemyArr;
   let closestEnemyIndex = getClosestTargetIndex(fish, enemyArr)
   if (!isNaN(closestEnemyIndex && fish.currentBehaviour != "Looking for Mate")){
-    outAngle = myMath.getAngleBetweenPoints(fish.x, fish.y, enemyArr[closestEnemyIndex].x, enemyArr[closestEnemyIndex].y) + Math.PI;
+    outAngle = getAngleBetweenPoints(fish.x, fish.y, enemyArr[closestEnemyIndex].x, enemyArr[closestEnemyIndex].y) + Math.PI;
     fish.currentBehaviour = "Fleeing";
     return outAngle;
   }
   //if the fish is a baby it just swims around randomly
   if (fish.adult == false){
-    outAngle = fish.currentAngle + myMath.random(protoFish[fish.species].randomSwimAngle * 2) - protoFish[fish.species].randomSwimAngle;
+    outAngle = fish.currentAngle + random(protoFish[fish.species].randomSwimAngle * 2) - protoFish[fish.species].randomSwimAngle;
     return outAngle
   }
   //check if a new behaviour should be set based on the amound of food
@@ -366,10 +360,10 @@ function fishBehaviour(fish){
     let closestFoodIndex = getClosestTargetIndex(fish, protoFish[fish.species].foodArr)
     // if theres food in sight set targetAngle towards it
     if (!isNaN(closestFoodIndex)){
-      outAngle = myMath.getAngleBetweenPoints(fish.x, fish.y, protoFish[fish.species].foodArr[closestFoodIndex].x, protoFish[fish.species].foodArr[closestFoodIndex].y)
+      outAngle = getAngleBetweenPoints(fish.x, fish.y, protoFish[fish.species].foodArr[closestFoodIndex].x, protoFish[fish.species].foodArr[closestFoodIndex].y)
       fish.targetFoodIndex = closestFoodIndex;
     } else {
-      outAngle = fish.currentAngle + myMath.random(protoFish[fish.species].randomSwimAngle * 2) - protoFish[fish.species].randomSwimAngle;
+      outAngle = fish.currentAngle + random(protoFish[fish.species].randomSwimAngle * 2) - protoFish[fish.species].randomSwimAngle;
     }
   }
 
@@ -378,10 +372,10 @@ function fishBehaviour(fish){
     let closestMateIndex = getClosestTargetIndex(fish, protoFish[fish.species].mateArr)
     // if theres food in sight set targetAngle towards it
     if (!isNaN(closestMateIndex)){
-      outAngle = myMath.getAngleBetweenPoints(fish.x, fish.y, protoFish[fish.species].mateArr[closestMateIndex].x, protoFish[fish.species].mateArr[closestMateIndex].y)
+      outAngle = getAngleBetweenPoints(fish.x, fish.y, protoFish[fish.species].mateArr[closestMateIndex].x, protoFish[fish.species].mateArr[closestMateIndex].y)
       fish.targetMateIndex = closestMateIndex;
     } else {
-      outAngle = fish.currentAngle + myMath.random(protoFish[fish.species].randomSwimAngle * 2) - protoFish[fish.species].randomSwimAngle;
+      outAngle = fish.currentAngle + random(protoFish[fish.species].randomSwimAngle * 2) - protoFish[fish.species].randomSwimAngle;
     }
   }
 
@@ -391,10 +385,10 @@ function fishBehaviour(fish){
 //this function checks which item in targetArray is closest to object thisfish, and returns its index in the targetArray
 function getClosestTargetIndex(thisfish, targetArray){
   let closestTargetIndex;
-  let closestTargetDistance = main.screenWidth * 2;
+  let closestTargetDistance = screenWidth * 2;
   targetArray.forEach((target, index) => {
       //get the nearest target
-      let distToCurrentTarget = myMath.dist(thisfish.x, thisfish.y, target.x, target.y)
+      let distToCurrentTarget = dist(thisfish.x, thisfish.y, target.x, target.y)
       if (distToCurrentTarget < thisfish.vision){
         //make sure the fish cant choose itself as target
         if (distToCurrentTarget < closestTargetDistance && distToCurrentTarget > 0){
@@ -413,16 +407,16 @@ function checkForFood(thisfish, targetArr){
     //check if the target still exists
     if (typeof targetArr[thisfish.targetFoodIndex] != "undefined"){
       //check if it's close enough to eat
-      if (myMath.dist(thisfish.x, thisfish.y, targetArr[thisfish.targetFoodIndex].x, targetArr[thisfish.targetFoodIndex].y) < thisfish.size){
+      if (dist(thisfish.x, thisfish.y, targetArr[thisfish.targetFoodIndex].x, targetArr[thisfish.targetFoodIndex].y) < thisfish.size){
         let eatenFoodIndex =  fishArr.findIndex(targetfish => targetArr[thisfish.targetFoodIndex] === targetfish)
         //check if the food is a fish, in that case it also has to be removed from fishArr
         if (eatenFoodIndex > -1){
           //if the eaten fish was selected clear the selection
-          if (fishArr[eatenFoodIndex].id == UI.selection.id){
-            UI.updateSelection("","", false);
+          if (fishArr[eatenFoodIndex].id == selection.id){
+            updateSelection("","", false);
           }
-          FX.createBloodCloud(fishArr[eatenFoodIndex].x, fishArr[eatenFoodIndex].y);
-          draw.deleteSprite(fishArr[eatenFoodIndex].id);
+          createBloodCloud(fishArr[eatenFoodIndex].x, fishArr[eatenFoodIndex].y);
+          deleteSprite(fishArr[eatenFoodIndex].id);
           fishArr.splice(eatenFoodIndex, 1);
         }
         //the fish has more food now
@@ -431,7 +425,7 @@ function checkForFood(thisfish, targetArr){
         targetArr.splice(thisfish.targetFoodIndex, 1);
 
         //the fish has a new behaviour now, eating
-        FX.createBubbles(thisfish.x, thisfish.y, 3, numOfElementsCreated, protoFish[thisfish.species].bubbleAmtWhenEats());
+        createBubbles(thisfish.x, thisfish.y, 3, numOfElementsCreated, protoFish[thisfish.species].bubbleAmtWhenEats());
         thisfish.currentBehaviour = "Eating";
         thisfish.speed = thisfish.speed * 0.2;
         thisfish.nextAction = frameCounter + thisfish.eatTime;
@@ -447,8 +441,8 @@ function checkForMate(thisfish, targetArr){
     //check if the target still exists
     if (typeof targetArr[thisfish.targetMateIndex] != "undefined"){
       //check if it's close enough to mate
-      if (myMath.dist(thisfish.x, thisfish.y, targetArr[thisfish.targetMateIndex].x, targetArr[thisfish.targetMateIndex].y) < thisfish.size * 0.8  &&
-      myMath.dist(thisfish.x, thisfish.y, targetArr[thisfish.targetMateIndex].x, targetArr[thisfish.targetMateIndex].y) > 1){
+      if (dist(thisfish.x, thisfish.y, targetArr[thisfish.targetMateIndex].x, targetArr[thisfish.targetMateIndex].y) < thisfish.size * 0.8  &&
+        dist(thisfish.x, thisfish.y, targetArr[thisfish.targetMateIndex].x, targetArr[thisfish.targetMateIndex].y) > 1){
         //check which fish is the oldest(the generation of the oldest one counts for the new fish)
         let oldestGeneration = thisfish.generation;
         if (targetArr[thisfish.targetMateIndex].generation > oldestGeneration){oldestGeneration = targetArr[thisfish.targetMateIndex].generation}
@@ -457,7 +451,7 @@ function checkForMate(thisfish, targetArr){
         //create a new fish
         fishArr.push(new fish(thisfish.x, thisfish.y, thisfish.currentAngle + Math.PI * 0.5, protoFish[thisfish.species].babySpriteName, newFishStats[2], newFishStats[0], thisfish.randomSwimAngle, newFishStats[1], thisfish.turnSpeed, false, thisfish.species, oldestGeneration + 1, newFishStats[3]))
         //spawn a heart
-        FX.createTemporaryObject((thisfish.x + targetArr[thisfish.targetMateIndex].x) / 2, (thisfish.y + targetArr[thisfish.targetMateIndex].y) / 2, 0, 0, protoFish[thisfish.species].loveFXIndex, numOfElementsCreated)
+        createTemporaryObject((thisfish.x + targetArr[thisfish.targetMateIndex].x) / 2, (thisfish.y + targetArr[thisfish.targetMateIndex].y) / 2, 0, 0, protoFish[thisfish.species].loveFXIndex, numOfElementsCreated)
         numOfElementsCreated++;
         //the parent fishes have less food now
         targetArr[thisfish.targetMateIndex].currentFood -= newFish[thisfish.species].babyCost;
@@ -479,34 +473,34 @@ function checkForMate(thisfish, targetArr){
 //check if a fish should die from hunger
 function checkIfYoureDead(fish, index){
   if (fish.currentFood < 0){
-    if (fish.id == UI.selection.id){
-      UI.updateSelection("","", false)
+    if (fish.id == selection.id){
+      updateSelection("","", false)
     }
-    draw.deleteSprite(fish.id);
-    FX.createTemporaryObject(fish.x, fish.y, fish.speed / 2, fish.currentAngle, protoFish[fish.species].deadFXIndex, numOfElementsCreated);
+    deleteSprite(fish.id);
+    createTemporaryObject(fish.x, fish.y, fish.speed / 2, fish.currentAngle, protoFish[fish.species].deadFXIndex, numOfElementsCreated);
     fishArr.splice(index, 1);
   }
 }
 
 //update stats of new fish when they are changed in the fish place UI
 export function updateNewFishStats(){
-  newFish[0].maxSpeed = protoFish[0].maxSpeed * UI.herringSpeed.value;
-  newFish[0].vision = Math.ceil(protoFish[0].vision * UI.herringVision.value);
-  newFish[0].actionTime = Math.ceil(protoFish[0].actionTime * UI.herringActionTime.value);
-  newFish[1].maxSpeed = protoFish[1].maxSpeed * UI.codSpeed.value;
-  newFish[1].vision = Math.ceil(protoFish[1].vision * UI.codVision.value);
-  newFish[1].actionTime = Math.ceil(protoFish[1].actionTime * UI.codActionTime.value);
+  newFish[0].maxSpeed = protoFish[0].maxSpeed * herringSpeed.value;
+  newFish[0].vision = Math.ceil(protoFish[0].vision * herringVision.value);
+  newFish[0].actionTime = Math.ceil(protoFish[0].actionTime * herringActionTime.value);
+  newFish[1].maxSpeed = protoFish[1].maxSpeed * codSpeed.value;
+  newFish[1].vision = Math.ceil(protoFish[1].vision * codVision.value);
+  newFish[1].actionTime = Math.ceil(protoFish[1].actionTime * codActionTime.value);
 }
 
 export function updateNewFishColor(index, species){
-  newFish[species].colorArr = UI.fishColors[index];
+  newFish[species].colorArr = fishColors[index];
 }
 
 //kill a fish (used when a fish is selected)
 export function killFish(id){
   let index = fishArr.findIndex(fish => fish.id === id)
-  draw.deleteSprite(id);
-  FX.createTemporaryObject(fishArr[index].x, fishArr[index].y, fishArr[index].speed / 2, fishArr[index].currentAngle, protoFish[fishArr[index].species].deadFXIndex, numOfElementsCreated);
+  deleteSprite(id);
+  createTemporaryObject(fishArr[index].x, fishArr[index].y, fishArr[index].speed / 2, fishArr[index].currentAngle, protoFish[fishArr[index].species].deadFXIndex, numOfElementsCreated);
   numOfElementsCreated++;
   fishArr.splice(index, 1);
 }
@@ -541,18 +535,16 @@ function updateFishAnimation(thisfish){
 }
   
 function movePlant(plant) {
-  let dxy = myMath.getVectorComponents(plant.currentAngle, plant.speed);
+  let dxy = getVectorComponents(plant.currentAngle, plant.speed);
   plant.x += dxy[0];
   plant.y += dxy[1];
   plant.x += wobblePlants(plant.x, plant.y, plant.wobbleAmt)[0];
   plant.y += wobblePlants(plant.x, plant.y, plant.wobbleAmt)[1];
 
-  if (plant.x < 0){plant.x = main.screenWidth + plant.x};
-  if (plant.x > main.screenWidth){plant.x = plant.x - main.screenWidth};
-  if (plant.y < 0){plant.y = main.screenHeight + plant.y};
-  if (plant.y > main.screenHeight){plant.y = plant.y - main.screenHeight};
+  plant.x = modAbs(plant.x, screenWidth);
+  plant.y = modAbs(plant.y, screenHeight);
 
-  plant.speed *= main.friction;
+  plant.speed *= friction;
 }
 
 function wobblePlants(x, y, amount) {
@@ -616,9 +608,9 @@ export function createProtoFish(x, y, species, colorArr) {
 function determineOffspringStats(fish1, fish2){
   //color
   let selectiveGene = Math.random();
-  let randomR = Math.random() * 2 * colorEvolution - colorEvolution;
-  let randomG = Math.random() * 2 * colorEvolution - colorEvolution;
-  let randomB = Math.random() * 2 * colorEvolution - colorEvolution;
+  let randomR = Math.random() * 2 * colorEvolution.value - colorEvolution.value;
+  let randomG = Math.random() * 2 * colorEvolution.value - colorEvolution.value;
+  let randomB = Math.random() * 2 * colorEvolution.value - colorEvolution.value;
   let RColor = fish1.colorArr[0] * selectiveGene + fish2.colorArr[0] * (1 - selectiveGene) + randomR;
   let GColor = fish1.colorArr[1] * selectiveGene + fish2.colorArr[1] * (1 - selectiveGene) + randomG;
   let BColor = fish1.colorArr[2] * selectiveGene + fish2.colorArr[2] * (1 - selectiveGene) + randomB;
@@ -634,9 +626,9 @@ function determineOffspringStats(fish1, fish2){
 
   //random mutation
   //check if a mutation occurs
-  if (Math.random() < mutationChance){
-    let whichStatMutates = myMath.random(2);
-    let evolutionAmount = Math.random() * 2 * mutationAmount - mutationAmount;
+  if (Math.random() < mutationChance.value){
+    let whichStatMutates = random(2);
+    let evolutionAmount = Math.random() * 2 * mutationAmount.value - mutationAmount.value;
     //update mutated stat and set string to be displayed
     evolveStr= "No Mutation"
     switch (whichStatMutates){
@@ -683,7 +675,7 @@ function determineOffspringStats(fish1, fish2){
         }
         break;
     }
-    FX.createTemporaryObject(fish1.x + 24, fish1.y - 8, 0, 0, 5, numOfElementsCreated, evolveStr)
+    createTemporaryObject(fish1.x + 24, fish1.y - 8, 0, 0, 5, numOfElementsCreated, evolveStr)
   }
   return [newSpeed, newVision, newActionTime, [RColor, GColor, BColor]];
 }
@@ -692,8 +684,8 @@ function determineOffspringStats(fish1, fish2){
 export function killAllFish(){
   frameCounter = 0;
   fishArr.forEach(thisfish => {
-    draw.deleteSprite(thisfish.id);
-    FX.createTemporaryObject(thisfish.x, thisfish.y, thisfish.speed / 2, thisfish.currentAngle, protoFish[thisfish.species].deadFXIndex, numOfElementsCreated);
+    deleteSprite(thisfish.id);
+    createTemporaryObject(thisfish.x, thisfish.y, thisfish.speed / 2, thisfish.currentAngle, protoFish[thisfish.species].deadFXIndex, numOfElementsCreated);
     numOfElementsCreated++;
   })
   fishArr.length = 0;
@@ -706,28 +698,25 @@ export function increaseObjectCounter(){
 
 export function initialize(){
   fishArr.forEach(thisfish => {
-    draw.deleteSprite(thisfish.id);
+    deleteSprite(thisfish.id);
   })
   fishArr.length = 0;
   plantsArr.length = 0;
 
-  newFish[0].colorArr = UI.fishColors[0];
-  newFish[1].colorArr = UI.fishColors[0];
+  newFish[0].colorArr = fishColors[0];
+  newFish[1].colorArr = fishColors[0];
 }
 
 export function changeOptions(){
-  protoPlant.spawnRate = 28 - (3*(UI.spawnRate.value-1));
-  mutationChance = UI.mutationChance.value;
-  mutationAmount = UI.mutationAmount.value;
-  colorEvolution = UI.colorEvolution.value;
+  protoPlant.spawnRate = 28 - (3*(spawnRate.value-1));
 
-  newFish[0].foodWhenHungry = UI.herringFoodWhenHungry.value;
-  newFish[0].foodWhenFull = UI.herringFoodWhenFull.value;
-  newFish[0].babyCost = UI.herringBabyCost.value;
+  newFish[0].foodWhenHungry = herringFoodWhenHungry.value;
+  newFish[0].foodWhenFull = herringFoodWhenFull.value;
+  newFish[0].babyCost = herringBabyCost.value;
 
-  newFish[1].foodWhenHungry = UI.codFoodWhenHungry.value;
-  newFish[1].foodWhenFull = UI.codFoodWhenFull.value;
-  newFish[1].babyCost = UI.codBabyCost.value;
+  newFish[1].foodWhenHungry = codFoodWhenHungry.value;
+  newFish[1].foodWhenFull = codFoodWhenFull.value;
+  newFish[1].babyCost = codBabyCost.value;
 
   fishArr.forEach(thisfish => {
     thisfish.foodWhenHungry = newFish[thisfish.species].foodWhenHungry;

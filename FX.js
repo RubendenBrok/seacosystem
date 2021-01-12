@@ -1,8 +1,7 @@
-import * as main from "./SeacoScript.js";
-import * as myMath from "./Math Functions.js";
-import * as UI from "./UI-management.js";
-import * as draw from "./Draw.js";
-import * as objects from "./Objects.js";
+import {friction} from "./SeacoScript.js";
+import {random, getVectorComponents} from "./Math Functions.js";
+import {createSprite, createText, deleteSprite} from "./Draw.js";
+import {numOfElementsCreated, increaseObjectCounter} from "./Objects.js";
 
 export const FXArr = [];
 
@@ -50,23 +49,23 @@ export const FXData = [{
 }];
 
 export function createTemporaryObject(x, y, speed, angle, kind, id, textStr){
-    let randomTime = myMath.random(FXData[kind].lifeTimeRandomness);
+    let randomTime = random(FXData[kind].lifeTimeRandomness);
     FXArr.push(new temoraryObject(x, y, speed, angle, FXData[kind].totalLifeTime + randomTime, FXData[kind].fadeInTime, FXData[kind].fadeOutStartTime + randomTime, FXData[kind].spriteName, id, FXData[kind].name, textStr));
 }
 
 export function createBubbles(x, y, kind, id, amount){
     for (let i = 0; i < amount; i++){
-        let randomTime = myMath.random(FXData[kind].lifeTimeRandomness);
-        FXArr.push(new temoraryObject(x + myMath.random(6)-3, y+ myMath.random(6)-3, 0.2 + Math.random(), Math.random()* 0.2 * Math.PI - 0.6 * Math.PI, FXData[kind].totalLifeTime + randomTime, FXData[kind].fadeInTime, FXData[kind].fadeOutStartTime + randomTime, FXData[kind].spriteName, objects.numOfElementsCreated, FXData[kind].name));
-        objects.increaseObjectCounter();
+        let randomTime = random(FXData[kind].lifeTimeRandomness);
+        FXArr.push(new temoraryObject(x + random(6)-3, y+ random(6)-3, 0.2 + Math.random(), Math.random()* 0.2 * Math.PI - 0.6 * Math.PI, FXData[kind].totalLifeTime + randomTime, FXData[kind].fadeInTime, FXData[kind].fadeOutStartTime + randomTime, FXData[kind].spriteName, numOfElementsCreated, FXData[kind].name));
+        increaseObjectCounter();
     }
 }
 
 export function createBloodCloud(x, y){
     for (let i = 0; i < 10; i++){
-        let randomTime = myMath.random(FXData[4].lifeTimeRandomness);
-        FXArr.push(new temoraryObject(x + myMath.random(6)-3, y+ myMath.random(6)-3, Math.random() * 0.7, Math.random() * 2 * Math.PI, FXData[4].totalLifeTime + randomTime, FXData[4].fadeInTime, FXData[4].fadeOutStartTime + randomTime, FXData[4].spriteName, objects.numOfElementsCreated, FXData[4].name));
-        objects.increaseObjectCounter();
+        let randomTime = random(FXData[4].lifeTimeRandomness);
+        FXArr.push(new temoraryObject(x + random(6)-3, y+ random(6)-3, Math.random() * 0.7, Math.random() * 2 * Math.PI, FXData[4].totalLifeTime + randomTime, FXData[4].fadeInTime, FXData[4].fadeOutStartTime + randomTime, FXData[4].spriteName, numOfElementsCreated, FXData[4].name));
+        increaseObjectCounter();
     }
 }
 
@@ -86,12 +85,12 @@ function temoraryObject (x, y, speed, angle, totalLifeTime, fadeInTime, fadeOutS
     //check if the object is a sprite or a text
     if (typeof spriteName !== 'undefined'){
         this.spriteName = spriteName;
-        draw.createSprite(spriteName, id, x, y, angle);
-        objects.increaseObjectCounter();
+        createSprite(spriteName, id, x, y, angle);
+        increaseObjectCounter();
     }
     if (typeof textStr !== 'undefined'){
-        draw.createText(textStr, id, x, y);
-        objects.increaseObjectCounter();
+        createText(textStr, id, x, y);
+        increaseObjectCounter();
     }
 }
 
@@ -119,9 +118,9 @@ function updateLifeTime(fxObject, index){
         //check if it isn't already dead
         if (fxObject.frameCounter > fxObject.totalLifeTime){
             if (fxObject.name == "EVOLUTION TEXT"){
-                draw.deleteSprite(fxObject.id, true);
+                deleteSprite(fxObject.id, true);
             } else {
-                draw.deleteSprite(fxObject.id);
+                deleteSprite(fxObject.id);
             }
             FXArr.splice(index, 1);
         } else {
@@ -132,8 +131,8 @@ function updateLifeTime(fxObject, index){
 }
 
 function moveObject(object) {
-    let dxy = myMath.getVectorComponents(object.angle, object.speed);
+    let dxy = getVectorComponents(object.angle, object.speed);
     object.x += dxy[0];
     object.y += dxy[1];
-    object.speed *= main.friction;
+    object.speed *= friction;
   }
