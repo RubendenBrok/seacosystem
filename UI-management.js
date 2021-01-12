@@ -1,10 +1,10 @@
 import * as main from "./SeacoScript.js";
 import * as myMath from "./Math Functions.js";
 import * as objects from "./Objects.js";
-import * as draw from "./Draw.js"
+import * as draw from "./Draw.js";
 import * as sound from "./sound.js";
 
-export let animationSpeed = 1
+export let animationSpeed = 1;
 
 export const selection = {
   selected: false,
@@ -19,14 +19,13 @@ export const selection = {
   frameCounter: 0,
   fadeTime: 120,
   opacity: 0,
-  maxOpacity: 1
+  maxOpacity: 1,
 };
 
-
 export const hover = {
-  hoverClass : "",
-  hoverID : "",
-}
+  hoverClass: "",
+  hoverID: "",
+};
 
 export const herringSpeed = document.getElementById("herringspeed");
 export const herringVision = document.getElementById("herringvision");
@@ -51,20 +50,25 @@ export const codTurquoise = document.getElementById("codturquoise");
 export const codWhite = document.getElementById("codwhite");
 export const codBlack = document.getElementById("codblack");
 export const fishColors = [
-  [255,140,140],
-  [140,140,255],
-  [140,255,140],
-  [200,200,100],
-  [230,60,200],
-  [40,220,220],
-  [200,200,200],
-  [50,50,50]];
+  [255, 140, 140],
+  [140, 140, 255],
+  [140, 255, 140],
+  [200, 200, 100],
+  [230, 60, 200],
+  [40, 220, 220],
+  [200, 200, 200],
+  [50, 50, 50],
+];
 export const spawnRate = document.getElementById("spawnrate");
 export const mutationAmount = document.getElementById("mutationamount");
 export const mutationChance = document.getElementById("mutationchance");
 export const colorEvolution = document.getElementById("colorevolution");
-export const herringFoodWhenHungry = document.getElementById("herringfoodwhenhungry");
-export const herringFoodWhenFull = document.getElementById("herringfoodwhenfull");
+export const herringFoodWhenHungry = document.getElementById(
+  "herringfoodwhenhungry"
+);
+export const herringFoodWhenFull = document.getElementById(
+  "herringfoodwhenfull"
+);
 export const herringBabyCost = document.getElementById("herringbabycost");
 export const codFoodWhenHungry = document.getElementById("codfoodwhenhungry");
 export const codFoodWhenFull = document.getElementById("codfoodwhenfull");
@@ -83,20 +87,22 @@ export function updateUIGraphics() {
   updateHover();
   draw.drawHover();
 
-  if (selection.selected){
-    let object = objects.fishArr.find(thisfish => thisfish.id === selection.id);
+  if (selection.selected) {
+    let object = objects
+      .getSeaObjectsByFamily("fish")
+      .find((thisfish) => thisfish.id === selection.id);
     draw.drawSelection(object.x, object.y, object.vision, object.size);
     updateSelectionStats(object);
     updateSelectionBox();
   }
 }
 
-export function removeElement(element){
+export function removeElement(element) {
   $(element).remove();
 }
 
-export function fadeThenDelete(element){
-  $(element).fadeOut(1000, function(){
+export function fadeThenDelete(element) {
+  $(element).fadeOut(1000, function () {
     $(element).remove();
   });
 }
@@ -105,7 +111,7 @@ export function moveElement(cssclass, id, x, y, objangle) {
   $("." + cssclass + "#" + id).css({
     left: x - fish1Width / 2,
     top: y - fish1Height / 2,
-    transform: "rotate(" + objangle + "rad)"
+    transform: "rotate(" + objangle + "rad)",
   });
 }
 
@@ -116,28 +122,28 @@ $(document).click((e) => {
   //check if the player didnt click on a UI button
   if (target.is("canvas")) {
     // if any popup is open close it
-    if ($("#intro").css("display") == "block"){
+    if ($("#intro").css("display") == "block") {
       sound.playSound(1);
       $("#intro").fadeOut(200);
     }
-    if ($("#options").css("display") == "block"){
+    if ($("#options").css("display") == "block") {
       sound.playSound(1);
       $("#options").fadeOut(200);
     }
-    if ($("#help").css("display") == "block"){
+    if ($("#help").css("display") == "block") {
       sound.playSound(1);
       $("#help").fadeOut(200);
     }
     //check if a new fish should be placed
-    if (placingFish >= 0) {
+    if (placingFish !== -1) {
       sound.playSound(3);
       objects.createProtoFish(e.pageX, e.pageY, placingFish);
-    //if not the selection should be updated
+      //if not the selection should be updated
     } else {
       //see which fish is closest
       let closestDist = 10000;
       let closestIndex;
-      objects.fishArr.forEach((fish, index) => {
+      objects.getSeaObjectsByFamily("fish").forEach((fish, index) => {
         if (myMath.dist(e.pageX, e.pageY, fish.x, fish.y) < closestDist) {
           closestDist = myMath.dist(e.pageX, e.pageY, fish.x, fish.y);
           closestIndex = index;
@@ -147,17 +153,17 @@ $(document).click((e) => {
       if (closestDist < selection.range) {
         if (!selection.selected) {
           $("#selectionbox").slideDown(300);
-          $("#selectionbox").css("display","flex")
+          $("#selectionbox").css("display", "flex");
           sound.playSound(0);
         }
         updateSelection(
-          objects.fishArr[closestIndex].id,
-          objects.fishArr[closestIndex].spriteName,
+          objects.getSeaObjectsByFamily("fish")[closestIndex].id,
+          objects.getSeaObjectsByFamily("fish")[closestIndex].spriteName,
           true
         );
       } else {
         // if it's to far away, nothing is selected anymore
-        if (selection.selected){
+        if (selection.selected) {
           sound.playSound(1);
           $("#selectionbox").slideUp(300, function () {
             selection.selected = false;
@@ -169,42 +175,42 @@ $(document).click((e) => {
 });
 
 //get current mouse position, used in selecting and hovering over fish
-$(document).on("mousemove", function(e){
+$(document).on("mousemove", function (e) {
   mouseX = e.clientX;
   mouseY = e.clientY;
 });
 
-function updateHover(){
-  let mouseElement = $(document.elementFromPoint(mouseX,mouseY));
-    if (mouseElement.is("canvas")){
-      canPlaceFish = true;
-      let closestDist = 10000;
-      let closestIndex;
-      objects.fishArr.forEach((fish, index) => {
-        if (myMath.dist(mouseX, mouseY, fish.x, fish.y) < closestDist) {
-          closestDist = myMath.dist(mouseX, mouseY, fish.x, fish.y);
-          closestIndex = index;
-        }
-      });
-      //if the closest fish is closer than the selection range, select it
-      if (closestDist < selection.range) {
-        hover.index = closestIndex;
-      } else {
-        hover.index = -1
+function updateHover() {
+  let mouseElement = $(document.elementFromPoint(mouseX, mouseY));
+  if (mouseElement.is("canvas")) {
+    canPlaceFish = true;
+    let closestDist = 10000;
+    let closestIndex;
+    objects.getSeaObjectsByFamily("fish").forEach((fish, index) => {
+      if (myMath.dist(mouseX, mouseY, fish.x, fish.y) < closestDist) {
+        closestDist = myMath.dist(mouseX, mouseY, fish.x, fish.y);
+        closestIndex = index;
       }
+    });
+    //if the closest fish is closer than the selection range, select it
+    if (closestDist < selection.range) {
+      hover.index = closestIndex;
     } else {
-      canPlaceFish = false;
+      hover.index = -1;
     }
+  } else {
+    canPlaceFish = false;
+  }
 }
 
 //close button in popups
-$(document).on('click', '.close', function(e) {
+$(document).on("click", ".close", function (e) {
   $(e.target).parent().parent().fadeOut(200);
   sound.playSound(1);
 });
 
 //close button in new fish menu
-$(document).on('click', '.closestats', () => {
+$(document).on("click", ".closestats", () => {
   placingFish = -1;
   if ($("#2.fishstats").css("display") == "block") {
     $("#2.fishstats").toggle(200);
@@ -216,39 +222,39 @@ $(document).on('click', '.closestats', () => {
 });
 
 //speed play/pause buttons
-$("#pauze").click(()=>{
+$("#pauze").click(() => {
   sound.playSound(0);
   animationSpeed = 0;
-  console.log(objects.fishArr)
+  console.log(objects.getSeaObjectsByFamily("fish"));
 });
 
-$("#play").click(()=>{
+$("#play").click(() => {
   sound.playSound(0);
   animationSpeed = 1;
 });
 
-$("#fastforward").click(()=>{
+$("#fastforward").click(() => {
   sound.playSound(0);
   animationSpeed = 5;
 });
 
-$("#ultrafastforward").click(()=>{
+$("#ultrafastforward").click(() => {
   sound.playSound(0);
   animationSpeed = 20;
 });
 
 //options popup
-$("#optionsbutton").click(()=>{
+$("#optionsbutton").click(() => {
   sound.playSound(0);
   $("#options").fadeToggle(200);
   //unselect fish if selected
-  $("#selectionbox").slideUp(300)
+  $("#selectionbox").slideUp(300);
   selection.selected = false;
   //close popup menus if open
-  if ($("#intro").css("display") == "block" || $("#intro").css("opacity") > 0){
+  if ($("#intro").css("display") == "block" || $("#intro").css("opacity") > 0) {
     $("#intro").fadeOut(200);
   }
-  if ($("#help").css("display") == "block" || $("#help").css("opacity") > 0){
+  if ($("#help").css("display") == "block" || $("#help").css("opacity") > 0) {
     $("#help").fadeOut(200);
   }
   //close place fish menu if open
@@ -262,17 +268,20 @@ $("#optionsbutton").click(()=>{
 });
 
 //help popup
-$("#helpbutton").click(()=>{
+$("#helpbutton").click(() => {
   sound.playSound(0);
   $("#help").fadeToggle(200);
   //unselect fish if selected
-  $("#selectionbox").slideUp(300)
+  $("#selectionbox").slideUp(300);
   selection.selected = false;
   //close popup menus if open
-  if ($("#intro").css("display") == "block" || $("#intro").css("opacity") > 0){
+  if ($("#intro").css("display") == "block" || $("#intro").css("opacity") > 0) {
     $("#intro").fadeOut(200);
   }
-  if ($("#options").css("display") == "block" || $("#options").css("opacity") > 0){
+  if (
+    $("#options").css("display") == "block" ||
+    $("#options").css("opacity") > 0
+  ) {
     $("#options").fadeOut(200);
   }
   //close place fish menu if open
@@ -286,38 +295,82 @@ $("#helpbutton").click(()=>{
 });
 
 //sound on/of
-$('#soundtoggle').click((e) => {
-  if (sound.soundOn){
-    $(e.target).html("SOUND ON")
+$("#soundtoggle").click((e) => {
+  if (sound.soundOn) {
+    $(e.target).html("SOUND ON");
   } else {
-    $(e.target).html("SOUND OFF")
+    $(e.target).html("SOUND OFF");
   }
   sound.toggleSound();
 });
 
 //placing new fish menu
-herringSpeed.addEventListener("change", () => {objects.updateNewFishStats()});
-herringVision.addEventListener("change", () => {objects.updateNewFishStats()});
-herringActionTime.addEventListener("change", () => {objects.updateNewFishStats()});
-herringRed.addEventListener("click", () => {objects.updateNewFishColor(0, 0), changeColorSelect(0,0)});
-herringBlue.addEventListener("click", () => {objects.updateNewFishColor(1, 0), changeColorSelect(1,0)});
-herringGreen.addEventListener("click", () => {objects.updateNewFishColor(2, 0), changeColorSelect(2,0)});
-herringYellow.addEventListener("click", () => {objects.updateNewFishColor(3, 0), changeColorSelect(3,0)});
-herringPurple.addEventListener("click", () => {objects.updateNewFishColor(4, 0), changeColorSelect(4,0)});
-herringTurquoise.addEventListener("click", () => {objects.updateNewFishColor(5, 0), changeColorSelect(5,0)});
-herringWhite.addEventListener("click", () => {objects.updateNewFishColor(6, 0), changeColorSelect(6,0)});
-herringBlack.addEventListener("click", () => {objects.updateNewFishColor(7, 0), changeColorSelect(7,0)});
-codSpeed.addEventListener("change", () => {objects.updateNewFishStats()});
-codVision.addEventListener("change", () => {objects.updateNewFishStats()});
-codActionTime.addEventListener("change", () => {objects.updateNewFishStats()});
-codRed.addEventListener("click", () => {objects.updateNewFishColor(0, 1), changeColorSelect(0,1)});
-codBlue.addEventListener("click", () => {objects.updateNewFishColor(1, 1), changeColorSelect(1,1)});
-codGreen.addEventListener("click", () => {objects.updateNewFishColor(2, 1), changeColorSelect(2,1)});
-codYellow.addEventListener("click", () => {objects.updateNewFishColor(3, 1), changeColorSelect(3,1)});
-codPurple.addEventListener("click", () => {objects.updateNewFishColor(4, 1), changeColorSelect(4,1)});
-codTurquoise.addEventListener("click", () => {objects.updateNewFishColor(5, 1), changeColorSelect(5,1)});
-codWhite.addEventListener("click", () => {objects.updateNewFishColor(6, 1), changeColorSelect(6,1)});
-codBlack.addEventListener("click", () => {objects.updateNewFishColor(7, 1), changeColorSelect(7,1)});
+herringSpeed.addEventListener("change", () => {
+  objects.updateNewFishStats();
+});
+herringVision.addEventListener("change", () => {
+  objects.updateNewFishStats();
+});
+herringActionTime.addEventListener("change", () => {
+  objects.updateNewFishStats();
+});
+herringRed.addEventListener("click", () => {
+  objects.updateNewFishColor(0, "herring"), changeColorSelect(0, 0);
+});
+herringBlue.addEventListener("click", () => {
+  objects.updateNewFishColor(1, "herring"), changeColorSelect(1, 0);
+});
+herringGreen.addEventListener("click", () => {
+  objects.updateNewFishColor(2, "herring"), changeColorSelect(2, 0);
+});
+herringYellow.addEventListener("click", () => {
+  objects.updateNewFishColor(3, "herring"), changeColorSelect(3, 0);
+});
+herringPurple.addEventListener("click", () => {
+  objects.updateNewFishColor(4, "herring"), changeColorSelect(4, 0);
+});
+herringTurquoise.addEventListener("click", () => {
+  objects.updateNewFishColor(5, "herring"), changeColorSelect(5, 0);
+});
+herringWhite.addEventListener("click", () => {
+  objects.updateNewFishColor(6, "herring"), changeColorSelect(6, 0);
+});
+herringBlack.addEventListener("click", () => {
+  objects.updateNewFishColor(7, "herring"), changeColorSelect(7, 0);
+});
+codSpeed.addEventListener("change", () => {
+  objects.updateNewFishStats();
+});
+codVision.addEventListener("change", () => {
+  objects.updateNewFishStats();
+});
+codActionTime.addEventListener("change", () => {
+  objects.updateNewFishStats();
+});
+codRed.addEventListener("click", () => {
+  objects.updateNewFishColor(0, "cod"), changeColorSelect(0, 1);
+});
+codBlue.addEventListener("click", () => {
+  objects.updateNewFishColor(1, "cod"), changeColorSelect(1, 1);
+});
+codGreen.addEventListener("click", () => {
+  objects.updateNewFishColor(2, "cod"), changeColorSelect(2, 1);
+});
+codYellow.addEventListener("click", () => {
+  objects.updateNewFishColor(3, "cod"), changeColorSelect(3, 1);
+});
+codPurple.addEventListener("click", () => {
+  objects.updateNewFishColor(4, "cod"), changeColorSelect(4, 1);
+});
+codTurquoise.addEventListener("click", () => {
+  objects.updateNewFishColor(5, "cod"), changeColorSelect(5, 1);
+});
+codWhite.addEventListener("click", () => {
+  objects.updateNewFishColor(6, "cod"), changeColorSelect(6, 1);
+});
+codBlack.addEventListener("click", () => {
+  objects.updateNewFishColor(7, "cod"), changeColorSelect(7, 1);
+});
 
 //options menu
 spawnRate.addEventListener("change", () => {
@@ -333,7 +386,9 @@ mutationAmount.addEventListener("change", () => {
   objects.changeOptions();
 });
 colorEvolution.addEventListener("change", () => {
-  $("#colorevolutionvalue").html(Math.round(colorEvolution.value / 255 * 100) + "%");
+  $("#colorevolutionvalue").html(
+    Math.round((colorEvolution.value / 255) * 100) + "%"
+  );
   objects.changeOptions();
 });
 //options for each fish species
@@ -363,77 +418,87 @@ codBabyCost.addEventListener("change", () => {
 });
 
 //kill all fish button
-$("#killallfish").click(()=>{
+$("#killallfish").click(() => {
   sound.playSound(5);
   objects.killAllFish();
-})
+});
 
 //toggle the place a fish menus
-$("#1.fishbutton").click(()=>{
+$("#1.fishbutton").click(() => {
   $("#1.fishstats").toggle(300);
   $("#selectionbox").slideUp(300, function () {
     selection.selected = false;
   });
-  switch (placingFish){
+
+  switch (placingFish) {
     case -1:
       sound.playSound(0);
-      placingFish = 0;
-    break;
-    case 0:
+      placingFish = "herring";
+      break;
+    case "herring":
       sound.playSound(1);
       placingFish = -1;
       break;
-    case 1:
+    case "cod":
       $("#2.fishstats").toggle(300);
       sound.playSound(0);
-      placingFish = 0;
+      placingFish = "herring";
       break;
   }
+
   //close popup menus if open
-  if ($("#intro").css("display") == "block" || $("#intro").css("opacity") > 0){
+  if ($("#intro").css("display") == "block" || $("#intro").css("opacity") > 0) {
     $("#intro").fadeOut(200);
   }
-  if ($("#help").css("display") == "block" || $("#help").css("opacity") > 0){
+  if ($("#help").css("display") == "block" || $("#help").css("opacity") > 0) {
     $("#help").fadeOut(200);
   }
-  if ($("#options").css("display") == "block" || $("#options").css("opacity") > 0){
+  if (
+    $("#options").css("display") == "block" ||
+    $("#options").css("opacity") > 0
+  ) {
     $("#options").fadeOut(200);
   }
-})
-$("#2.fishbutton").click(()=>{
+});
+$("#2.fishbutton").click(() => {
   $("#2.fishstats").toggle(300);
   $("#selectionbox").slideUp(300, function () {
     selection.selected = false;
   });
-  switch (placingFish){
+
+  switch (placingFish) {
     case -1:
       sound.playSound(0);
-      placingFish = 1;
+      placingFish = "cod";
       break;
-    case 0:
+    case "herring":
       $("#1.fishstats").toggle(300);
       sound.playSound(0);
-      placingFish = 1;
+      placingFish = "cod";
       break;
-    case 1:
+    case "cod":
       sound.playSound(1);
       placingFish = -1;
       break;
   }
+
   //close popup menus if open
-  if ($("#intro").css("display") == "block" || $("#intro").css("opacity") > 0){
+  if ($("#intro").css("display") == "block" || $("#intro").css("opacity") > 0) {
     $("#intro").fadeOut(200);
   }
-  if ($("#help").css("display") == "block" || $("#help").css("opacity") > 0){
+  if ($("#help").css("display") == "block" || $("#help").css("opacity") > 0) {
     $("#help").fadeOut(200);
   }
-  if ($("#options").css("display") == "block" || $("#options").css("opacity") > 0){
+  if (
+    $("#options").css("display") == "block" ||
+    $("#options").css("opacity") > 0
+  ) {
     $("#options").fadeOut(200);
   }
-})
+});
 
 //check if something is selected
-function updateSelectionStats(object){
+function updateSelectionStats(object) {
   selection.id = object.id;
   selection.speed = object.maxSpeed;
   selection.size = object.size;
@@ -450,10 +515,10 @@ function updateSelectionStats(object){
 }
 
 // give other functions the ability to update the selection
-export function updateSelection(id, className, selected){
+export function updateSelection(id, className, selected) {
   selection.id = id;
   selection.className = className;
-  if (selected){
+  if (selected) {
     selection.selected = true;
   } else {
     selection.selected = false;
@@ -462,72 +527,101 @@ export function updateSelection(id, className, selected){
 }
 
 //let the selectionbox move and update when a fish is selected
-function updateSelectionBox(){
-  if (selection.className == "fish1" || selection.className == "fish2"){
-  $("#selectionboxtext").html(
-    "<h3><b>"+selection.name.toUpperCase()+"</b></h3>"+
-    "<p>Food: "+Math.round(selection.food * 10) / 10+"</p>"+
-   // "<p>ID: "+selection.id+"</p>"+
-    "<p>Speed: "+Math.round(selection.speed * 10) / 10+"</p>"+
-    "<p>Visual Range: "+Math.round(selection.vision)+"</p>"+
-    "<p>Reaction Time: "+Math.round(selection.actionTime)+"</p>"+
-    "<p>Generation: "+(selection.generation + 1)+"</p>"+
-  //  "<p>X: "+Math.floor(selection.x)+"</p>"+
-  //  "<p>Y: "+Math.floor(selection.y)+"</p></div>"+
-    "<p><b><br><i>"+selection.currentBehaviour+"</i></b></p>")
+function updateSelectionBox() {
+  if (selection.className == "fish1" || selection.className == "fish2") {
+    $("#selectionboxtext").html(
+      "<h3><b>" +
+        selection.name.toUpperCase() +
+        "</b></h3>" +
+        "<p>Food: " +
+        Math.round(selection.food * 10) / 10 +
+        "</p>" +
+        // "<p>ID: "+selection.id+"</p>"+
+        "<p>Speed: " +
+        Math.round(selection.speed * 10) / 10 +
+        "</p>" +
+        "<p>Visual Range: " +
+        Math.round(selection.vision) +
+        "</p>" +
+        "<p>Reaction Time: " +
+        Math.round(selection.actionTime) +
+        "</p>" +
+        "<p>Generation: " +
+        (selection.generation + 1) +
+        "</p>" +
+        //  "<p>X: "+Math.floor(selection.x)+"</p>"+
+        //  "<p>Y: "+Math.floor(selection.y)+"</p></div>"+
+        "<p><b><br><i>" +
+        selection.currentBehaviour +
+        "</i></b></p>"
+    );
   }
 
-  if (selection.className == "fish1baby" || selection.className == "fish2baby"){
+  if (
+    selection.className == "fish1baby" ||
+    selection.className == "fish2baby"
+  ) {
     $("#selectionboxtext").html(
-      "<h3><b>BABY "+selection.name.toUpperCase()+"</b></h3>"+
-      "<p>Speed: "+Math.floor(selection.speed * 10) / 10+"</p>"+
-      "<p>Generation: "+(selection.generation + 1)+"</p>"+
-      "<p>Time till adulthood: "+Math.floor(selection.framesTillAdult / 4))
-    }
+      "<h3><b>BABY " +
+        selection.name.toUpperCase() +
+        "</b></h3>" +
+        "<p>Speed: " +
+        Math.floor(selection.speed * 10) / 10 +
+        "</p>" +
+        "<p>Generation: " +
+        (selection.generation + 1) +
+        "</p>" +
+        "<p>Time till adulthood: " +
+        Math.floor(selection.framesTillAdult / 4)
+    );
+  }
 }
 
 //'kill' button when fish is selected
-$(document).on('click', '#killfish', function(){
-  objects.killFish(selection.id)
+$(document).on("click", "#killfish", function () {
+  objects.killFish(selection.id);
   selection.selected = false;
   sound.playSound(4);
-  $("#selectionbox").slideUp(300)
+  $("#selectionbox").slideUp(300);
 });
 
 //handle the color selection in the place a fish menus
-function changeColorSelect(color, species){
+function changeColorSelect(color, species) {
   let speciesClass;
-  if (species === 0){
-    speciesClass = ".herring"
+  if (species === 0) {
+    speciesClass = ".herring";
   } else {
-    speciesClass = ".cod"
+    speciesClass = ".cod";
   }
-  $(speciesClass+".colorblock").css("box-shadow", "none")
+  $(speciesClass + ".colorblock").css("box-shadow", "none");
 
-  switch (color){
+  switch (color) {
     case 0:
-      $(speciesClass+".colorblock.red").css("box-shadow", "var(--glow2)");
+      $(speciesClass + ".colorblock.red").css("box-shadow", "var(--glow2)");
       break;
     case 1:
-      $(speciesClass+".colorblock.blue").css("box-shadow", "var(--glow2)");
+      $(speciesClass + ".colorblock.blue").css("box-shadow", "var(--glow2)");
       break;
     case 2:
-      $(speciesClass+".colorblock.green").css("box-shadow", "var(--glow2)");
+      $(speciesClass + ".colorblock.green").css("box-shadow", "var(--glow2)");
       break;
     case 3:
-      $(speciesClass+".colorblock.yellow").css("box-shadow", "var(--glow2)");
+      $(speciesClass + ".colorblock.yellow").css("box-shadow", "var(--glow2)");
       break;
     case 4:
-      $(speciesClass+".colorblock.purple").css("box-shadow", "var(--glow2)");
+      $(speciesClass + ".colorblock.purple").css("box-shadow", "var(--glow2)");
       break;
     case 5:
-      $(speciesClass+".colorblock.turquoise").css("box-shadow", "var(--glow2)");
+      $(speciesClass + ".colorblock.turquoise").css(
+        "box-shadow",
+        "var(--glow2)"
+      );
       break;
     case 6:
-      $(speciesClass+".colorblock.white").css("box-shadow", "var(--glow2)");
+      $(speciesClass + ".colorblock.white").css("box-shadow", "var(--glow2)");
       break;
     case 7:
-      $(speciesClass+".colorblock.black").css("box-shadow", "var(--glow2)");
+      $(speciesClass + ".colorblock.black").css("box-shadow", "var(--glow2)");
       break;
   }
 }
