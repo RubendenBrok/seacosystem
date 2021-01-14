@@ -1,9 +1,9 @@
-import {updatePlants, updateFish, updateFrameCounter, fishArr, initialize, createPlants, createProtoFish} from "./Objects.js";
-import {random} from "./Math Functions.js";
-import {createHoverSprites, initializeFilters, resizePixi, updateSprite, drawPlants, updateDisplacementFilter, pixiInit} from "./Draw.js";
-import {animationSpeed, updateUIGraphics} from "./UI-management.js";
-import {initializeSound} from "./sound.js";
-import {updateFX, FXArr} from "./FX.js";
+import {updatePlants, updateFish, updateFrameCounter, fishArr, initialize, createPlants, createProtoFish} from "./Objects";
+import {random} from "./Math Functions";
+import {createHoverSprites, initializeFilters, resizePixi, updateSprite, drawPlants, updateDisplacementFilter, pixiInit} from "./Draw";
+import {animationSpeed, updateUIGraphics} from "./UI-management";
+import {initializeSound} from "./sound";
+import {updateFX, FXArr} from "./FX";
 
 export const friction = 0.97;
 export let screenWidth = window.innerWidth;

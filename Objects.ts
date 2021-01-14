@@ -1,8 +1,32 @@
-import {screenWidth, screenHeight, friction} from "./SeacoScript.js";
-import {random, getVectorComponents, modAbs, getAngleBetweenPoints, dist} from "./Math Functions.js";
-import {fishColors, spawnRate, mutationChance, mutationAmount, colorEvolution, herringFoodWhenFull, herringFoodWhenHungry, herringActionTime, codFoodWhenFull, codFoodWhenHungry, codActionTime, selection, updateSelection, herringSpeed, herringVision, codSpeed, codVision} from "./UI-management.js";
-import {createSprite, deleteSprite} from "./Draw.js";
-import {createBloodCloud, createBubbles, createTemporaryObject} from "./FX.js";
+import { screenWidth, screenHeight, friction } from "./SeacoScript";
+import {
+  random,
+  getVectorComponents,
+  modAbs,
+  getAngleBetweenPoints,
+  dist,
+} from "./Math Functions";
+import {
+  fishColors,
+  spawnRate,
+  mutationChance,
+  mutationAmount,
+  colorEvolution,
+  herringFoodWhenFull,
+  herringFoodWhenHungry,
+  herringActionTime,
+  codFoodWhenFull,
+  codFoodWhenHungry,
+  codActionTime,
+  selection,
+  updateSelection,
+  herringSpeed,
+  herringVision,
+  codSpeed,
+  codVision,
+} from "./UI-management";
+import { createSprite, deleteSprite } from "./Draw";
+import { createBloodCloud, createBubbles, createTemporaryObject } from "./FX";
 
 export let numOfElementsCreated = 0;
 

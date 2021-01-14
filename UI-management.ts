@@ -1,8 +1,8 @@
-import * as main from "./SeacoScript.js";
-import * as myMath from "./Math Functions.js";
-import * as objects from "./Objects.js";
-import * as draw from "./Draw.js"
-import * as sound from "./sound.js";
+import * as main from "./SeacoScript";
+import * as myMath from "./Math Functions";
+import * as objects from "./Objects";
+import * as draw from "./Draw"
+import * as sound from "./sound";
 
 export let animationSpeed = 1
 

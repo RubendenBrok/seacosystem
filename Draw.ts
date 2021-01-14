@@ -1,6 +1,6 @@
-import {main, screenHeight, screenWidth} from "./SeacoScript.js";
-import {fishArr, plantsArr} from "./Objects.js";
-import {hover, canPlaceFish, placingFish, animationSpeed, mouseX, mouseY} from "./UI-management.js";
+import {main, screenHeight, screenWidth} from "./SeacoScript";
+import {fishArr, plantsArr} from "./Objects";
+import {hover, canPlaceFish, placingFish, animationSpeed, mouseX, mouseY} from "./UI-management";
 import { Application, Sprite, Graphics, Container, Texture, filters, WRAP_MODES, Text} from 'pixi.js'
 import { CRTFilter, AdjustmentFilter } from 'pixi-filters'
 

@@ -1,7 +1,7 @@
-import {friction} from "./SeacoScript.js";
-import {random, getVectorComponents} from "./Math Functions.js";
-import {createSprite, createText, deleteSprite} from "./Draw.js";
-import {numOfElementsCreated, increaseObjectCounter} from "./Objects.js";
+import {friction} from "./SeacoScript";
+import {random, getVectorComponents} from "./Math Functions";
+import {createSprite, createText, deleteSprite} from "./Draw";
+import {numOfElementsCreated, increaseObjectCounter} from "./Objects";
 
 export const FXArr = [];
 

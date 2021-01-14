@@ -2,7 +2,7 @@
 // MATH FUNCTIONS //
 ////////////////////
 
-import {screenHeight, screenWidth} from "./SeacoScript.js";
+import {screenHeight, screenWidth} from "./SeacoScript";
 
 export var randomSineList = [];
 
