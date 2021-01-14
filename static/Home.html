@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<head>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Iceland&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">  <link rel="stylesheet" href="Style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <div class = "popup" id = "intro">
+    <h1>Welcome to Seacosystem</h1>
+    <div class = "scrolltext">Seacosystem is a simulation game in which you can experiment with your very own ecosystem, without hurting any real animals! In this game there are two species of fish: herring and cod. The herrings eat the plankton which spawn everywhere in the water, while the cods eat the herrings. Click on a fish in the simulation to learn more about it, and use the buttons in the upper right to add fishes.
+      <br><br>
+      Can you create an ecosystem in which both species of fish thrive? Play around with the fishes stats and the ecosystem settings, and have fun!
+    </div>
+    <div class = "close textbutton"><u>Close</u></div>
+  </div>
+
+  <div class = "popup" id = "options">
+    <h1>Options</h1>
+    <table>
+      <tr>
+        <th>Plankton Spawn Rate</th>
+        <td>
+          <input class="slider optionsslider" id ="spawnrate" type="range" min="1" max="10" step="1" value="5">
+          <div class = "tablevalue" id = "spawnratevalue">5</div>
+        </td>
+      </tr>
+      <tr>
+        <th>Mutation Amount</th>
+        <td>
+          <input class="slider optionsslider" id ="mutationamount" type="range" min="0" max="1" step="0.01" value="0.4">
+          <div class = "tablevalue" id = "mutationamountvalue">40%</div>
+        </td>
+      </tr>
+      <tr>
+        <th>Mutation Chance</th>
+        <td>
+          <input class="slider optionsslider" id ="mutationchance" type="range" min="0" max="1" step="0.01" value="0.4">
+          <div class = "tablevalue" id = "mutationchancevalue">40%</div>
+        </td>
+      </tr>
+      <tr>
+        <th>Color Randomness</th>
+        <td>
+          <input class="slider optionsslider" id ="colorevolution" type="range" min="0" max="255" step="1" value="25">
+          <div class = "tablevalue" id = "colorevolutionvalue">10%</div>
+        </td>
+      </tr>
+    </table>
+    <div class = "fishoptionscontainer">
+      <div class = "fishoptions">
+        <ul>
+          <li class = "listmargin"><h4>Herring</h4></li>
+          <li><div>Food When Hungry</div></li>
+          <li class = "listmargin">
+            <input class="slider optionsslider" id ="herringfoodwhenhungry" type="range" min="1" max="20" step="1" value="7">
+            <div class = "tablevalue" id="herringfoodwhenhungryvalue">7</div>
+          </li>
+          <li><div>Food When Full</div></li>
+          <li class = "listmargin">
+            <input class="slider optionsslider" id ="herringfoodwhenfull" type="range" min="1" max="30" step="1" value="15">
+            <div class = "tablevalue" id="herringfoodwhenfullvalue">15</div>
+          </li>
+          <li><div>Baby Cost</div></li>
+          <li class = "listmargin">
+            <input class="slider optionsslider" id ="herringbabycost" type="range" min="1" max="20" step="1" value="5">
+            <div class = "tablevalue" id="herringbabycostvalue">5</div>
+          </li>
+        </ul>
+      </div>
+      <div class = "fishoptions">
+        <ul>
+          <li class = "listmargin"><h4>Cod</h4></li>
+          <li><div>Food When Hungry</div></li>
+          <li class = "listmargin">
+            <input class="slider optionsslider" id ="codfoodwhenhungry" type="range" min="1" max="20" step="1" value="7">
+            <div class = "tablevalue" id="codfoodwhenhungryvalue">7</div>
+          </li>
+          <li><div>Food When Full</div></li>
+          <li class = "listmargin">
+            <input class="slider optionsslider" id ="codfoodwhenfull" type="range" min="1" max="30" step="1" value="15">
+            <div class = "tablevalue" id="codfoodwhenfullvalue">15</div>
+          </li>
+          <li><div>Baby Cost</div></li>
+          <li class = "listmargin">
+            <input class="slider optionsslider" id ="codbabycost" type="range" min="1" max="20" step="1" value="5">
+            <div class = "tablevalue" id="codbabycostvalue">5</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class = "kill textbutton" id = "killallfish">KILL EVERYTHING</div>
+    <div class = "close textbutton"><u>Close</u></div>
+  </div>
+
+
+  <div class = "popup" id = "help">
+    <h1>About Seacosystem</h1>
+    <div class = "scrolltext">Seacosystem is a simulation game in which you can experiment with your very own ecosystem, without hurting any real animals! In this game there are two species of fish: herring and cod. The herrings eat the plankton which spawn everywhere in the water, while the cods eat the herrings. Click on a fish in the simulation to learn more about it, and use the buttons in the upper right to add fishes.
+      <br><br>
+      Each fish has 3 hereditary traits: <b><i>Speed</i></b>, <b><i>Visual range</i></b> and <b><i>Reaction time</i></b>. When a new fish is born it gets its own speed, vision, and reaction time, based on its parents traits. There is also a chance a mutation occurs, and a random amount is added or subtracted from one of these values. The probability of a mutation and its severeness can be changed in the Ecosystem Settings menu.
+      <br><br>
+      The <b><i>Speed</i></b> trait defines how fast a fish can swim. A high speed value will allow it to reach food quicker, but swimming faster also costs more food!
+      <br><br>
+      The <b><i>Visual Range</i></b> trait defines at which distance a fish can detect food, a possible mate, or a threat. When you select a fish you will also see the circle in which it can see things – the higher the visual range gets, the further it will be able to see.
+      <br><br>
+      <b><i>Reaction Time</i></b> tells how fast a fish can make decisions about its next action. A fish with a low reaction time will respond quicker when it sees food or a threat, and will thus have an advantage over its peers. 
+      <br><br>
+      <h4>Ecosystem settings:</h4>
+      <br>
+      <b><i>Plankton Spawn Rate</i></b>: Higher values mean more plankton. Setting this to a maximum may slow down the simulation due to big population sizes
+      <br><br>
+      <b><i>Mutation Chance</i></b>: Determines the chance a mutation to one of the three stats occurs when a baby is born
+      <br><br>
+      <b><i>Mutation Amount</i></b>: Determines how big a mutation can be (note that even when this is set to 100%, small mutations can also happen – this just determines the maximum amount)
+      <br><br>  
+      <b><i>Color Randomness</i></b>: The color of a baby fish is always somewhere between the color of its parents. This option decides how much randomness is added to that color.
+      <br><br>
+      <b><i>Food when full</i></b>: when a fish has this amount of food, it will start looking for a mate.
+      <br><br>
+      <b><i>Food when hungry</i></b>: when a fish has less than this amount of food, it will start looking for food again.
+      <br><br>
+      <b><i>Baby cost</i></b>: Making a baby costs both of the parents this much food. Watch out – if this is close to or higher than Food when hungry, the fishes will often die when mating
+    </div>
+    <div class = "close textbutton"><u>Close</u></div>
+  </div>
+
+  <div class = "playbuttons">
+    <div class = "button hovergrow" id = "pauze"></div>
+    <div class = "button hovergrow" id = "play"></div>
+    <div class = "button hovergrow" id = "fastforward"></div>
+    <div class = "button hovergrow" id = "ultrafastforward"></div>
+  </div>
+  
+  <div class = "fishbuttonmenu">
+    <div class = "fishbuttoncontainer">
+      <div class = "fishbutton" id = "placeherringbutton">
+        <img src = "./addfish1.png" alt = "Herring" class = "center">
+      </div>
+      <div class = "fishstats" id = "herringstats">
+        <h3>ADD HERRING</h3>
+        <p>Speed</p>
+        <input class="slider speed" id ="herringspeed" type="range" min="0.2" max="2" step="0.1" value="1">
+        <p>Visual range</p>
+        <input class="slider vision" id = "herringvision" type="range" min="0.3" max="2.5" step="0.1" value="1">
+        <p>Reaction Time</p>
+        <input class="slider actiontime" id = "herringactiontime" type="range" id="actiontime" min="0.2" max="2" step="0.1" value="1">
+        <p>Color</p>
+        <div class = "colorcontainer">
+          <div id = "herringred" class= "herring colorblock red"></div>
+          <div id = "herringblue" class= "herring colorblock blue"></div>
+          <div id = "herringgreen" class= "herring colorblock green"></div>
+          <div id = "herringyellow" class= "herring colorblock yellow"></div>
+          <div id = "herringpurple" class= "herring colorblock purple"></div>
+          <div id = "herringturquoise" class= "herring colorblock turquoise"></div>
+          <div id = "herringwhite" class= "herring colorblock white"></div>
+          <div id = "herringblack" class= "herring colorblock black"></div>
+        </div>
+        <div class = "closestats textbutton"><u>Close</u></div>
+      </div>
+    </div>
+    <div class = "fishbuttoncontainer">
+      <div class = "fishbutton" id = "placecodbutton">
+        <img src = "./addfish2.png" alt = "Cod" class = "center">
+      </div>
+      <div class = "fishstats" id = "codstats">
+        <h3>ADD COD</h3>
+        <p>Speed</p>
+        <input class="slider speed" id ="codspeed" type="range" min="0.2" max="2" step="0.1" value="1">
+        <p>Visual range</p>
+        <input class="slider vision" id = "codvision" type="range" min="0.3" max="2.5" step="0.1" value="1">
+        <p>Reaction Time</p>
+        <input class="slider actiontime" id = "codactiontime" type="range" id="actiontime" min="0.2" max="2" step="0.1" value="1">
+        <p>Color</p>
+        <div class = "colorcontainer">
+          <div id = "codred" class = "cod colorblock red"></div>
+          <div id = "codblue" class = "cod colorblock blue"></div>
+          <div id = "codgreen" class = "cod colorblock green"></div>
+          <div id = "codyellow" class = "cod colorblock yellow"></div>
+          <div id = "codpurple" class = "cod colorblock purple"></div>
+          <div id = "codturquoise" class = "cod colorblock turquoise"></div>
+          <div id = "codwhite" class = "cod colorblock white"></div>
+          <div id = "codblack" class = "cod colorblock black"></div>
+        </div>
+        <div class = "closestats textbutton"><u>Close</u></div>     
+      </div>
+    </div>
+  </div>
+  <div class = "textbuttoncontainer">
+    <div class = "textbutton" id = "optionsbutton">OPTIONS</div>
+    <div class = "textbutton" id = "helpbutton">HELP</div>
+    <div class = "textbutton" id = "soundtoggle">SOUND OFF</div>
+  </div>
+  <div id="fishtank">
+    
+    <div id="selectionbox">
+      <div id= "selectionboxtext"></div>
+      <div class = "kill textbutton" id = "killfish">KILL</div>
+    </div>
+  </div>
+
+  <script src="./main.js" type="module"></script>
+</body>

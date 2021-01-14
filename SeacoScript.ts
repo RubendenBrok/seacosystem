@@ -1,9 +1,14 @@
+
+//import "./Home.html";
+//import "./Style.css";
 import {updatePlants, updateFish, updateFrameCounter, fishArr, initialize, createPlants, createProtoFish} from "./Objects";
 import {random} from "./Math Functions";
 import {createHoverSprites, initializeFilters, resizePixi, updateSprite, drawPlants, updateDisplacementFilter, pixiInit} from "./Draw";
 import {animationSpeed, updateUIGraphics} from "./UI-management";
 import {initializeSound} from "./sound";
 import {updateFX, FXArr} from "./FX";
+
+
 
 export const friction = 0.97;
 export let screenWidth = window.innerWidth;
@@ -88,7 +93,7 @@ function InitializeGame(){
       [30,255,30]
     );
   }
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 1; i++) {
     createProtoFish(
       random(window.innerWidth),
       random(window.innerHeight),
