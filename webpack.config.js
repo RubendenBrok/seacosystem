@@ -1,5 +1,7 @@
 const path = require("path");
+
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: "./SeacoScript.ts",
@@ -27,6 +29,9 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [{ from: "static" }],
     }),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html'
+    })
   ],
   devServer: {
     contentBase: "./dist",
