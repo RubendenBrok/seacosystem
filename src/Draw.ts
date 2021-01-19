@@ -1,14 +1,15 @@
 import {mainGame, screenHeight, screenWidth} from "./SeacoScript";
 import {fishArr, plantsArr} from "./Objects";
 import {hover, canPlaceFish, placingFish, animationSpeed, mouseX, mouseY} from "./UI-management";
-//import { Application, Sprite, Graphics, Container, Texture, filters, WRAP_MODES, Text} from 'pixi.js'
-import * as PIXI from "pixi.js"
+import { Application, Sprite, Graphics, Container, Texture, filters, WRAP_MODES, Text, Loader} from 'pixi.js'
+//import * as PIXI from "pixi.js"
 import { CRTFilter, AdjustmentFilter } from 'pixi-filters'
 
 export const spriteArr = [];
 
 let app;
 let fishTank;
+let loader;
 
 const menuColor = 0xcdffc8;
 const backgroundColor = 0x332255;
@@ -32,7 +33,7 @@ let adjustmentFilter;
 export function pixiInit() {
 
   //Create a Pixi Application
-    app = new PIXI.Application({
+    app = new Application({
     width: window.innerWidth,
     height: window.innerHeight,
     antialias: true,
@@ -40,32 +41,30 @@ export function pixiInit() {
     resolution: 1,
   });
 
-
+  loader = Loader.shared;
   document.body.appendChild(app.view);
 
-  background = new PIXI.Graphics()
+  background = new Graphics()
   app.stage.addChild(background);
   background.beginFill(backgroundColor);
   background.drawRect(0,0,screenWidth, screenHeight);
   background.endFill();
 
   
-  fishTank = new PIXI.Container();
+  fishTank = new Container();
   app.stage.addChild(fishTank);
 
-  graphics = new PIXI.Graphics()
+  graphics = new Graphics()
   app.stage.addChild(graphics);
 
-  selectionDarkness = new PIXI.Graphics();
+  selectionDarkness = new Graphics();
   app.stage.addChild(selectionDarkness);
 
-  selectionMask = new PIXI.Graphics()
+  selectionMask = new Graphics()
   app.stage.addChild(selectionMask);
   selectionMask.isMask = true;
 
-
-  //app.loader.baseUrl = "static"
-  app.loader 
+  loader 
     .add("fish1","nieuwevis1.png")
     .add("fish1baby","vis1baby.png")
     .add("fish2","vis2rechts.png")
@@ -78,14 +77,14 @@ export function pixiInit() {
     .add("blood","bloed.png")
     .add("addfish1","addfish1.png")
     .add("addfish2","addfish2.png");
-
- app.loader.load(mainGame);
+  
+  loader.load(()=>mainGame());
 
 };
 
 export function createHoverSprites(){
-  placeFish1Sprite = new (PIXI.Sprite as any).from(app.loader.resources.addfish1.texture)
-  placeFish2Sprite = new (PIXI.Sprite as any).from(app.loader.resources.addfish2.texture)
+  placeFish1Sprite = new (Sprite as any).from(loader.resources.addfish1.texture)
+  placeFish2Sprite = new (Sprite as any).from(loader.resources.addfish2.texture)
   app.stage.addChild(placeFish1Sprite);
   app.stage.addChild(placeFish2Sprite);
   placeFish1Sprite.anchor.set(0.5);
@@ -95,13 +94,12 @@ export function createHoverSprites(){
 }
 
 export function initializeFilters(){
-  console.log(app.loader.resources.cloudtexture.texture)
-  displacementSprite = new (PIXI.Sprite as any).from(app.loader.resources.cloudtexture.texture);
+  displacementSprite = new (Sprite as any).from(loader.resources.cloudtexture.texture);
   displacementSprite.scale.x = 2.5;
   displacementSprite.scale.y = 2.5;
 
-  displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite);
-  displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+  displacementFilter = new filters.DisplacementFilter(displacementSprite);
+  displacementSprite.texture.baseTexture.wrapMode = WRAP_MODES.REPEAT;
   fishTank.addChild(displacementSprite);
   fishTank.filters = [displacementFilter];
 
@@ -128,7 +126,7 @@ export function initializeFilters(){
 export function createSprite(spriteName, id, x, y, angle, color?){
   //push new sprite into array
   spriteArr.push({
-    sprite : new (PIXI.Sprite as any).from(app.loader.resources[spriteName].texture),
+    sprite : new (Sprite as any).from(loader.resources[spriteName].texture),
     id : id,
     animation : {
     }
@@ -190,6 +188,7 @@ export function createText(textStr, id, x, y){
   })
   spriteArr[spriteArr.length-1].sprite.style.fontSize = '15px';
   spriteArr[spriteArr.length-1].sprite.style.fill = '#cdffc8';
+
   //initialize the new sprite to its position and rotation
   spriteArr[spriteArr.length-1].sprite.position.set(x, y);
 

@@ -34,17 +34,6 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
       
-      {
-        test: require.resolve("jquery"),
-        loader: "expose-loader",
-        options: {
-          exposes: {
-            globalName: "$",
-            override: false,
-          },
-        }
-      }
-      
     ]
   },
   plugins: [

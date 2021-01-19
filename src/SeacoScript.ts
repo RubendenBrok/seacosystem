@@ -15,6 +15,8 @@ export let screenHeight = window.innerHeight;
 
 pixiInit();
 
+
+
 export function mainGame() {
 
   initializeSound();
