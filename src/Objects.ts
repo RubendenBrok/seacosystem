@@ -49,6 +49,14 @@ spawnRate : 5,
 foodValue : 2
 }
 
+enum behaviourEnum {
+  LOOKINGFORFOOD = "Looking For Food",
+  LOOKINGFORMATE = "Looking For Mate",
+  EATING = "Eating",
+  FLEEING = "Fleeing",
+  MATING = "Mating"
+}
+
 const pi = Math.PI;
 
 export let frameCounter = 0;
@@ -273,13 +281,13 @@ export function updateFish() {
     switch (fish.species) {
       case 0:
         fish1Arr.push(fish);
-        if (fish.currentBehaviour == "Looking for Mate") {
+        if (fish.currentBehaviour == behaviourEnum.LOOKINGFORMATE) {
           fish1LookingForMate.push(fish);
         }
         break;
       case 1:
         fish2Arr.push(fish);
-        if (fish.currentBehaviour == "Looking for Mate") {
+        if (fish.currentBehaviour == behaviourEnum.LOOKINGFORMATE) {
           fish2LookingForMate.push(fish);
         }
         break;
@@ -303,11 +311,11 @@ export function updateFish() {
     }
     //movement
     moveFish(thisfish);
-    if (thisfish.currentBehaviour == "Looking for Food"){
+    if (thisfish.currentBehaviour == behaviourEnum.LOOKINGFORFOOD){
       checkForFood(thisfish, protoFish[thisfish.species].foodArr);
       checkIfYoureDead(thisfish, index);
     }
-    if (thisfish.currentBehaviour == "Looking for Mate"){
+    if (thisfish.currentBehaviour == behaviourEnum.LOOKINGFORMATE){
       checkForMate(thisfish, protoFish[thisfish.species].mateArr);
     }
   });
@@ -362,7 +370,7 @@ function fishBehaviour(fish){
   let closestEnemyIndex = getClosestTargetIndex(fish, enemyArr)
   if (!isNaN(closestEnemyIndex)) {
     outAngle = getAngleBetweenPoints(fish.x, fish.y, enemyArr[closestEnemyIndex].x, enemyArr[closestEnemyIndex].y) + Math.PI;
-    fish.currentBehaviour = "Fleeing";
+    fish.currentBehaviour = behaviourEnum.FLEEING;
     return outAngle;
   }
   //if the fish is a baby it just swims around randomly
@@ -372,17 +380,17 @@ function fishBehaviour(fish){
   }
   //check if a new behaviour should be set based on the amound of food
   if (fish.currentFood < fish.foodWhenHungry){
-    fish.currentBehaviour = "Looking for Food";
+    fish.currentBehaviour = behaviourEnum.LOOKINGFORFOOD;
   }
-  if (fish.currentFood < fish.foodWhenFull && fish.currentBehaviour != "Looking for Mate"){
-    fish.currentBehaviour = "Looking for Food";
+  if (fish.currentFood < fish.foodWhenFull && fish.currentBehaviour != behaviourEnum.LOOKINGFORMATE){
+    fish.currentBehaviour = behaviourEnum.LOOKINGFORFOOD;
   }
   if (fish.currentFood > fish.foodWhenFull){
-    fish.currentBehaviour = "Looking for Mate";
+    fish.currentBehaviour = behaviourEnum.LOOKINGFORMATE;
   }
 
   // if the fish is hungry check if there's any food in range - else just keep on looking
-  if (fish.currentBehaviour == "Looking for Food"){
+  if (fish.currentBehaviour == behaviourEnum.LOOKINGFORFOOD){
     let closestFoodIndex = getClosestTargetIndex(fish, protoFish[fish.species].foodArr)
     // if theres food in sight set targetAngle towards it
     if (!isNaN(closestFoodIndex)){
@@ -394,7 +402,7 @@ function fishBehaviour(fish){
   }
 
   //if the fish is full check if theres a mate in sight
-  if (fish.currentBehaviour == "Looking for Mate"){
+  if (fish.currentBehaviour == behaviourEnum.LOOKINGFORMATE){
     let closestMateIndex = getClosestTargetIndex(fish, protoFish[fish.species].mateArr)
     // if theres food in sight set targetAngle towards it
     if (!isNaN(closestMateIndex)){
@@ -452,7 +460,7 @@ function checkForFood(thisfish, targetArr){
 
         //the fish has a new behaviour now, eating
         createBubbles(thisfish.x, thisfish.y, 3, numOfElementsCreated, protoFish[thisfish.species].bubbleAmtWhenEats());
-        thisfish.currentBehaviour = "Eating";
+        thisfish.currentBehaviour = behaviourEnum.EATING;
         thisfish.speed = thisfish.speed * 0.2;
         thisfish.nextAction = frameCounter + thisfish.eatTime;
         setFishAnimation(thisfish);
@@ -481,13 +489,13 @@ function checkForMate(thisfish, targetArr){
         numOfElementsCreated++;
         //the parent fishes have less food now
         targetArr[thisfish.targetMateIndex].currentFood -= newFish[thisfish.species].babyCost;
-        targetArr[thisfish.targetMateIndex].currentBehaviour = "Mating";
+        targetArr[thisfish.targetMateIndex].currentBehaviour = behaviourEnum.MATING;
         targetArr[thisfish.targetMateIndex].speed = 0;
         targetArr[thisfish.targetMateIndex].nextAction = frameCounter + protoFish[thisfish.species].mateTime;
         targetArr[thisfish.targetMateIndex].currentAngle += thisfish.currentAngle + Math.PI
         setFishAnimation(targetArr[thisfish.targetMateIndex]);
         thisfish.currentFood -= newFish[thisfish.species].babyCost;
-        thisfish.currentBehaviour = "Mating"
+        thisfish.currentBehaviour = behaviourEnum.MATING
         thisfish.speed = 0;
         thisfish.nextAction = frameCounter + thisfish.mateTime;
         setFishAnimation(thisfish);
@@ -536,13 +544,13 @@ function setFishAnimation(fish) {
     fish.animationCounter = 0;
     fish.animated = true;
 
-    if (fish.currentBehaviour == "Looking for Food" || fish.currentBehaviour == "Looking for Mate" || fish.currentBehaviour == "Fleeing") {
+    if (fish.currentBehaviour == behaviourEnum.LOOKINGFORFOOD || fish.currentBehaviour == behaviourEnum.LOOKINGFORMATE || fish.currentBehaviour == behaviourEnum.FLEEING) {
       fish.animationID = 0;
     }
-    if (fish.currentBehaviour == "Eating") {
+    if (fish.currentBehaviour == behaviourEnum.EATING) {
       fish.animationID = 1;
     }
-    if (fish.currentBehaviour == "Mating") {
+    if (fish.currentBehaviour == behaviourEnum.MATING) {
       fish.animationID = 2;
     }
   }
