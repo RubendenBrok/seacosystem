@@ -1,7 +1,7 @@
 import { dist } from "./Math Functions";
 import { newFish, fishArr, createProtoFish, updateNewFishColor, updateNewFishStats, changeOptions, killAllFish, killFish, protoFish} from "./Objects";
 import  { clearSelectionDarkness, drawHover, drawSelection} from "./Draw"
-import {playSound, soundOn, toggleSound} from "./sound";
+import {playSound, soundOn, toggleSound} from "./Sound";
 import * as $ from "jquery"
 
 

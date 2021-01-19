@@ -5,7 +5,7 @@ import {updatePlants, updateFish, updateFrameCounter, fishArr, initialize, creat
 import {random} from "./Math Functions";
 import {createHoverSprites, initializeFilters, resizePixi, updateSprite, drawPlants, updateDisplacementFilter, pixiInit} from "./Draw";
 import {animationSpeed, updateUIGraphics} from "./UI-management";
-import {initializeSound} from "./sound";
+import {initializeSound} from "./Sound";
 import {updateFX, FXArr} from "./FX";
 
 export const friction = 0.97;

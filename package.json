@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "description": "Seacosystem is an online app/game that lets you play with an underwater ecosystem",
     "scripts": {
-        "start": "webpack serve --open"
+        "start": "webpack serve --open",
+        "build": "webpack"
     },
     "repository": {
         "type": "git",
