@@ -10,6 +10,8 @@
 <style>
   #loader {
     position: absolute;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(220, 255, 200);
     width: 100vw;
     height: 100vh;
     display: block;
@@ -27,21 +29,22 @@
     animation-name: loadanimation;
     animation-duration: 2s;
     animation-iteration-count: infinite;
-    margin-top: 20%
+    margin-top: 20%;
+    font-size: 40px;
   }
 
   @keyframes loadanimation {
     0% {
       opacity: 0.1;
-      text-shadow: 0px 0px 3px white;
+      text-shadow: 0px 0px 3px rgb(220, 255, 200)
       }
     50% {
       opacity: 1;
-      text-shadow: 0px 0px 20px white;
+      text-shadow: 0px 0px 20px rgb(220, 255, 200);
       }
     100% {
       opacity: 0.1;
-      text-shadow: 0px 0px 3px white;
+      text-shadow: 0px 0px 3px rgb(220, 255, 200);
       }
   }
 </style>

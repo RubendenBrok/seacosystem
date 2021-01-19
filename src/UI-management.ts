@@ -215,11 +215,11 @@ $(document).on('click', '.close', function(e) {
 //close button in new fish menu
 $(document).on('click', '.closestats', () => {
   placingFish = -1;
-  if ($("#2.fishstats").css("display") == "block") {
-    $("#2.fishstats").toggle(200);
+  if ($("#codstats.fishstats").css("display") == "block") {
+    $("#codstats.fishstats").toggle(200);
   }
-  if ($("#1.fishstats").css("display") == "block") {
-    $("#1.fishstats").toggle(200);
+  if ($("#herringstats.fishstats").css("display") == "block") {
+    $("#herringstats.fishstats").toggle(200);
   }
   playSound(1);
 });
@@ -262,11 +262,11 @@ $("#optionsbutton").click(()=>{
   }
   //close place fish menu if open
   placingFish = -1;
-  if ($("#2.fishstats").css("display") == "block") {
-    $("#2.fishstats").toggle(200);
+  if ($("#codstats.fishstats").css("display") == "block") {
+    $("#codstats.fishstats").toggle(200);
   }
-  if ($("#1.fishstats").css("display") == "block") {
-    $("#1.fishstats").toggle(200);
+  if ($("#herringstats.fishstats").css("display") == "block") {
+    $("#herringstats.fishstats").toggle(200);
   }
 });
 
@@ -286,11 +286,11 @@ $("#helpbutton").click(()=>{
   }
   //close place fish menu if open
   placingFish = -1;
-  if ($("#2.fishstats").css("display") == "block") {
-    $("#2.fishstats").toggle(200);
+  if ($("#codstats.fishstats").css("display") == "block") {
+    $("#codstats.fishstats").toggle(200);
   }
-  if ($("#1.fishstats").css("display") == "block") {
-    $("#1.fishstats").toggle(200);
+  if ($("#herringstats.fishstats").css("display") == "block") {
+    $("#herringstats.fishstats").hide(200);
   }
 });
 

@@ -674,7 +674,6 @@ export function createProtoFish(x, y, species, colorArr) {
       colorArr
     )
   );
-  console.log(fishArr[fishArr.length-1])
 }
 
 function determineOffspringStats(fish1, fish2){
