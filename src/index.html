@@ -7,7 +7,48 @@
 
 </head>
 
+<style>
+  #loader {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    text-align: center;
+    background-color: black;
+  }
+  #content {
+    display: none;
+  }
+
+  body {
+    margin: 0;
+  }
+  .flash {
+    animation-name: loadanimation;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    margin-top: 20%
+  }
+
+  @keyframes loadanimation {
+    0% {
+      opacity: 0.1;
+      text-shadow: 0px 0px 3px white;
+      }
+    50% {
+      opacity: 1;
+      text-shadow: 0px 0px 20px white;
+      }
+    100% {
+      opacity: 0.1;
+      text-shadow: 0px 0px 3px white;
+      }
+  }
+</style>
+
 <body>
+  <div id = "loader"> <h1 class = "flash">LOADING<h1></div>
+  <div id = "content">
   <div class = "popup" id = "intro">
     <h1>Welcome to Seacosystem</h1>
     <div class = "scrolltext">Seacosystem is a simulation game in which you can experiment with your very own ecosystem, without hurting any real animals! In this game there are two species of fish: herring and cod. The herrings eat the plankton which spawn everywhere in the water, while the cods eat the herrings. Click on a fish in the simulation to learn more about it, and use the buttons in the upper right to add fishes.
@@ -200,5 +241,5 @@
       <div class = "kill textbutton" id = "killfish">KILL</div>
     </div>
   </div>
-
+  </div>
 </body>

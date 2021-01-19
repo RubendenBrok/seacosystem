@@ -322,13 +322,13 @@ export function updateFish() {
     switch (fish.species) {
       case 0:
         fish1Arr.push(fish);
-        if (fish.currentBehaviour == behaviourEnum.LOOKINGFORMATE) {
+        if (fish.currentBehaviour === behaviourEnum.LOOKINGFORMATE) {
           fish1LookingForMate.push(fish);
         }
         break;
       case 1:
         fish2Arr.push(fish);
-        if (fish.currentBehaviour == behaviourEnum.LOOKINGFORMATE) {
+        if (fish.currentBehaviour === behaviourEnum.LOOKINGFORMATE) {
           fish2LookingForMate.push(fish);
         }
         break;
@@ -352,11 +352,11 @@ export function updateFish() {
     }
     //movement
     moveFish(thisfish);
-    if (thisfish.currentBehaviour == behaviourEnum.LOOKINGFORFOOD){
+    if (thisfish.currentBehaviour === behaviourEnum.LOOKINGFORFOOD){
       checkForFood(thisfish, protoFish[thisfish.species].foodArr);
       checkIfYoureDead(thisfish, index);
     }
-    if (thisfish.currentBehaviour == behaviourEnum.LOOKINGFORMATE){
+    if (thisfish.currentBehaviour === behaviourEnum.LOOKINGFORMATE){
       checkForMate(thisfish, protoFish[thisfish.species].mateArr);
     }
   });
@@ -431,7 +431,7 @@ function fishBehaviour(fish){
   }
 
   // if the fish is hungry check if there's any food in range - else just keep on looking
-  if (fish.currentBehaviour == behaviourEnum.LOOKINGFORFOOD){
+  if (fish.currentBehaviour === behaviourEnum.LOOKINGFORFOOD){
     let closestFoodIndex = getClosestTargetIndex(fish, protoFish[fish.species].foodArr)
     // if theres food in sight set targetAngle towards it
     if (!isNaN(closestFoodIndex)){
@@ -443,7 +443,7 @@ function fishBehaviour(fish){
   }
 
   //if the fish is full check if theres a mate in sight
-  if (fish.currentBehaviour == behaviourEnum.LOOKINGFORMATE){
+  if (fish.currentBehaviour === behaviourEnum.LOOKINGFORMATE){
     let closestMateIndex = getClosestTargetIndex(fish, protoFish[fish.species].mateArr)
     // if theres food in sight set targetAngle towards it
     if (!isNaN(closestMateIndex)){
@@ -585,13 +585,13 @@ function setFishAnimation(fish) {
     fish.animationCounter = 0;
     fish.animated = true;
 
-    if (fish.currentBehaviour == behaviourEnum.LOOKINGFORFOOD || fish.currentBehaviour == behaviourEnum.LOOKINGFORMATE || fish.currentBehaviour == behaviourEnum.FLEEING) {
+    if (fish.currentBehaviour === behaviourEnum.LOOKINGFORFOOD || fish.currentBehaviour === behaviourEnum.LOOKINGFORMATE || fish.currentBehaviour === behaviourEnum.FLEEING) {
       fish.animationID = 0;
     }
-    if (fish.currentBehaviour == behaviourEnum.EATING) {
+    if (fish.currentBehaviour === behaviourEnum.EATING) {
       fish.animationID = 1;
     }
-    if (fish.currentBehaviour == behaviourEnum.MATING) {
+    if (fish.currentBehaviour === behaviourEnum.MATING) {
       fish.animationID = 2;
     }
   }

@@ -13,9 +13,12 @@ export let screenWidth = window.innerWidth;
 export let screenHeight = window.innerHeight;
 
 
+window.addEventListener("load", ()=>{
+    document.getElementById("loader").style.display = "none"
+    document.getElementById("content").style.display = "block"
+})
+
 pixiInit();
-
-
 
 export function mainGame() {
 
