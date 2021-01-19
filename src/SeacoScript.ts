@@ -79,7 +79,7 @@ function InitializeGame(){
       [255,60,60]
     );
   }
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 20; i++) {
     createProtoFish(
       random(window.innerWidth),
       random(window.innerHeight),

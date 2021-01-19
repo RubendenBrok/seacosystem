@@ -30,37 +30,12 @@ import {
 import { createSprite, deleteSprite } from "./Draw";
 import { createBloodCloud, createBubbles, createTemporaryObject } from "./FX";
 
-export let numOfElementsCreated = 0;
-
-const protoPlant = {
-size : 2,
-growSize : 1.5,
-speed : 0.5,
-gColorStart : 165,
-rColorStart : 64,
-startColor: [136,221,17],
-RColoration : -40,
-GColoration : -150,
-color :  "0x88DD11",
-reproduceRate : 300,
-wobbleAmt : 0.03,
-reproduceChance : 0.45,
-spawnRate : 5,
-foodValue : 2
-}
-
-enum behaviourEnum {
-  LOOKINGFORFOOD = "Looking For Food",
-  LOOKINGFORMATE = "Looking For Mate",
-  EATING = "Eating",
-  FLEEING = "Fleeing",
-  MATING = "Mating"
-}
-
 const pi = Math.PI;
 
 export let frameCounter = 0;
 export function updateFrameCounter() {frameCounter++;};
+
+export let numOfElementsCreated = 0;
 
 export const plantsArr = [];
 export const fishArr = [];
@@ -73,31 +48,31 @@ const fish1Arr = [],
   fish3Arr = [],
   fish3LookingForMate = [];
 
-  const animationData = [
-    {
-      // swimming animation
-      funcX: function (animationLength, animationCounter) {
-        return 0.1 * (animationCounter / animationLength);},
-      funcY: function (animationLength, animationCounter) {
-        return -0.1 * (animationCounter / animationLength);}
+const animationData = [
+  {
+    // swimming animation
+    funcX: function (animationLength, animationCounter) {
+      return 0.1 * (animationCounter / animationLength);},
+    funcY: function (animationLength, animationCounter) {
+      return -0.1 * (animationCounter / animationLength);}
+  },
+  {
+    // eating animation
+    funcX: function () {
+        return 0.1
     },
-    {
-      // eating animation
-      funcX: function (animationLength, animationCounter) {
-          return 0.1
-      },
-      funcY: function (animationLength, animationCounter) {
-          return 0.1 
-      }
-    },
-    {
-      // mating animation
-      funcX: function (animationLength, animationCounter) {
-        return 0.3 * Math.sin(animationCounter * 0.5);},
-      funcY: function (animationLength, animationCounter) {
-        return 0.1 * Math.cos(animationCounter * 0.5);},
-    },
-  ];
+    funcY: function () {
+        return 0.1 
+    }
+  },
+  {
+    // mating animation
+    funcX: function (animationLength, animationCounter) {
+      return 0.3 * Math.sin(animationCounter * 0.5);},
+    funcY: function (animationLength, animationCounter) {
+      return 0.1 * Math.cos(animationCounter * 0.5);},
+  },
+];
 
 // All starting attributes of the fish. Ordered by species, 0 = Herring, 1  = Cod, 2 = Shark
 export const protoFish = [
@@ -170,80 +145,146 @@ export const protoFish = [
 //an array with properties for a new fish that's placed by the player, which starts off identical to the protofish
 export const newFish = JSON.parse(JSON.stringify(protoFish));
 
+enum behaviourEnum {
+  LOOKINGFORFOOD = "Looking For Food",
+  LOOKINGFORMATE = "Looking For Mate",
+  EATING = "Eating",
+  FLEEING = "Fleeing",
+  MATING = "Mating"
+}
+
+const protoPlant = {
+  size : 2,
+  growSize : 1.5,
+  speed : 0.5,
+  gColorStart : 165,
+  rColorStart : 64,
+  startColor: [136,221,17],
+  RColoration : -40,
+  GColoration : -150,
+  color :  "0x88DD11",
+  reproduceRate : 300,
+  wobbleAmt : 0.03,
+  reproduceChance : 0.45,
+  spawnRate : 5,
+  foodValue : 2
+  }
 
 // basic object properties
-export function seaObject(x, y, speed, currentAngle, size) {
-  this.x = x;
-  this.y = y;
-  this.speed = speed;
-  this.currentAngle = currentAngle;
-  this.creationTime = frameCounter;
-  this.size = size;
+export class seaObject{
+  //(x, y, speed, currentAngle, size) 
+  x : number;
+  y : number;
+  speed: number;
+  currentAngle: number;
+  creationTime: number;
+  size: number;
+  constructor(x: number, y: number, speed: number, currentAngle: number, size: number){
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+    this.creationTime = frameCounter;
+    this.size = size;
+    this.currentAngle = currentAngle;
+  }
 }
 
 //create a new plant/plankton
-export function plant(
-  x,
-  y,
-  speed,
-  currentAngle,
-  size,
-  reproduceRate,
-  reproduceChance,
-  wobbleAmt,
-  color
-) {
-  seaObject.call(this, x, y, speed, currentAngle, size);
-  this.reproduceRate = reproduceRate + random(reproduceRate);
-  this.reproduceChance = reproduceChance;
-  this.wobbleAmt = wobbleAmt;
-  this.RColor = protoPlant.startColor[0];
-  this.GColor = protoPlant.startColor[1];
-  this.BColor = protoPlant.startColor[2];
-  this.foodValue = protoPlant.foodValue;
+export class plant extends seaObject {
+//properties
+  reproduceRate: number;
+  reproduceChance: number;
+  wobbleAmt: number;
+  RColor: number;
+  GColor: number;
+  BColor: number;
+  foodValue: number;
+
+//constructor
+  constructor(x, y, speed, currentAngle, size){
+    super(x, y, speed, currentAngle, size)
+    this.reproduceRate = protoPlant.reproduceRate + random(protoPlant.reproduceRate);
+    this.reproduceChance = protoPlant.reproduceChance;
+    this.wobbleAmt = protoPlant.wobbleAmt;
+    this.RColor = protoPlant.startColor[0];
+    this.GColor = protoPlant.startColor[1];
+    this.BColor = protoPlant.startColor[2];
+    this.foodValue = protoPlant.foodValue;
+  };
 }
 
 //create a new fish
-export function fish(x, y, currentAngle, spriteName, actionTime, maxSpeed, randomSwimAngle, vision, turnSpeed, adult, species, generation, colorArr) {
-  seaObject.call(this, x, y, 0, currentAngle)
-  //set the species of fish and whether it's an adult or baby
-  this.species = species;
-  this.adult = adult;
-  this.generation = generation;
+export class fish extends seaObject {
+  //(x, y, currentAngle, spriteName, actionTime, maxSpeed, randomSwimAngle, vision, turnSpeed, adult, species, generation, colorArr) {
+  //properties
+  species: number;
+  adult: boolean;
+  generation: number;
 
-  //set non-evolvable attributes for the fish by referencing the protoFish object for the specific species
-  this.size = protoFish[species].size;
-  this.currentFood = protoFish[species].startFood;
-  this.foodWhenHungry = newFish[species].foodWhenHungry;
-  this.foodWhenFull = newFish[species].foodWhenFull;
-  this.foodValue = protoFish[species].foodValue;
-  this.mateTime = protoFish[species].mateTime;
-  this.eatTime = protoFish[species].eatTime;
+  currentFood: number;
+  foodWhenHungry: number;
+  foodWhenFull: number;
+  foodValue: number;
+  mateTime: number;
+  eatTime: number;
 
-  //set evolvable attributes for the fish, these have to be passed on in the creation function
-  this.maxSpeed = maxSpeed;
-  this.randomSwimAngle = randomSwimAngle;
-  this.vision = vision;
-  this.turnSpeed = turnSpeed;
-  this.colorArr = colorArr;
+  maxSpeed: number;
+  randomSwimAngle: number;
+  turnSpeed: number;
+  colorArr: [];
+  vision: number;
 
-  //create a sprite for the fish
-  this.spriteName = spriteName;
-  this.id = numOfElementsCreated;
-  createSprite(spriteName, this.id, this.x, this.y, this.currentAngle, colorArr);
-  numOfElementsCreated++;
+  spriteName: string;
+  id: number;
 
-  //other variables used by the movement and behaviour functions
-  this.nextAction = 0;
-  this.actionTime = actionTime;
-  this.turnCounter = 0;
-  this.turnFraction = 0;
-  this.currentBehaviour = "";
-  this.framesTillAdult = protoFish[species].framesTillAdult;
-  this.animated = false;
-  this.animationScaleX = 1;
-  this.animationScaleY = 1;
-  this.animationID = 0;
+  nextAction: number;
+  actionTime: number;
+  turnCounter: number;
+  turnFraction: number;
+  currentBehaviour: string;
+  framesTillAdult: number;
+  animated: boolean;
+  animationScaleX: number;
+  animationScaleY: number;
+  animationID: number;
+
+  constructor (x, y, currentAngle, spriteName, actionTime, maxSpeed, randomSwimAngle, vision, turnSpeed, adult, species, generation, colorArr){
+    super(x, y, 0, currentAngle, protoFish[species].size)
+    this.species = species;
+    this.adult = adult;
+    this.generation = generation;
+
+    this.currentFood = protoFish[species].startFood;
+    this.foodWhenHungry = newFish[species].foodWhenHungry;
+    this.foodWhenFull = newFish[species].foodWhenFull;
+    this.foodValue = protoFish[species].foodValue;
+    this.mateTime = protoFish[species].mateTime;
+    this.eatTime = protoFish[species].eatTime;
+
+    this.maxSpeed = maxSpeed;
+    this.randomSwimAngle = randomSwimAngle;
+    this.vision = vision;
+    this.turnSpeed = turnSpeed;
+    this.colorArr = colorArr;
+  
+    //create a sprite for the fish
+    this.spriteName = spriteName;
+    this.id = numOfElementsCreated;
+
+    this.nextAction = 0;
+    this.actionTime = actionTime;
+    this.turnCounter = 0;
+    this.turnFraction = 0;
+    this.currentBehaviour = "";
+    this.framesTillAdult = protoFish[species].framesTillAdult;
+    this.animated = false;
+    this.animationScaleX = 1;
+    this.animationScaleY = 1;
+    this.animationID = 0;
+
+    createSprite(this.spriteName, this.id, this.x, this.y, this.currentAngle, this.colorArr);
+    numOfElementsCreated++;
+  }
 }
 
 //plant update cycle
@@ -369,7 +410,7 @@ function fishBehaviour(fish){
   let enemyArr = protoFish[fish.species].enemyArr;
   let closestEnemyIndex = getClosestTargetIndex(fish, enemyArr)
   if (!isNaN(closestEnemyIndex)) {
-    outAngle = getAngleBetweenPoints(fish.x, fish.y, enemyArr[closestEnemyIndex].x, enemyArr[closestEnemyIndex].y) + Math.PI;
+    outAngle = getAngleBetweenPoints(fish.x, fish.y, enemyArr[closestEnemyIndex].x, enemyArr[closestEnemyIndex].y) + pi;
     fish.currentBehaviour = behaviourEnum.FLEEING;
     return outAngle;
   }
@@ -483,7 +524,7 @@ function checkForMate(thisfish, targetArr){
         // determine the offspring color
         let newFishStats = determineOffspringStats(thisfish, targetArr[thisfish.targetMateIndex]);
         //create a new fish
-        fishArr.push(new fish(thisfish.x, thisfish.y, thisfish.currentAngle + Math.PI * 0.5, protoFish[thisfish.species].babySpriteName, newFishStats[2], newFishStats[0], thisfish.randomSwimAngle, newFishStats[1], thisfish.turnSpeed, false, thisfish.species, oldestGeneration + 1, newFishStats[3]))
+        fishArr.push(new fish(thisfish.x, thisfish.y, thisfish.currentAngle + pi * 0.5, protoFish[thisfish.species].babySpriteName, newFishStats[2], newFishStats[0], thisfish.randomSwimAngle, newFishStats[1], thisfish.turnSpeed, false, thisfish.species, oldestGeneration + 1, newFishStats[3]))
         //spawn a heart
         createTemporaryObject((thisfish.x + targetArr[thisfish.targetMateIndex].x) / 2, (thisfish.y + targetArr[thisfish.targetMateIndex].y) / 2, 0, 0, protoFish[thisfish.species].loveFXIndex, numOfElementsCreated)
         numOfElementsCreated++;
@@ -492,7 +533,7 @@ function checkForMate(thisfish, targetArr){
         targetArr[thisfish.targetMateIndex].currentBehaviour = behaviourEnum.MATING;
         targetArr[thisfish.targetMateIndex].speed = 0;
         targetArr[thisfish.targetMateIndex].nextAction = frameCounter + protoFish[thisfish.species].mateTime;
-        targetArr[thisfish.targetMateIndex].currentAngle += thisfish.currentAngle + Math.PI
+        targetArr[thisfish.targetMateIndex].currentAngle += thisfish.currentAngle + pi
         setFishAnimation(targetArr[thisfish.targetMateIndex]);
         thisfish.currentFood -= newFish[thisfish.species].babyCost;
         thisfish.currentBehaviour = behaviourEnum.MATING
@@ -605,12 +646,8 @@ export function createPlants(number, x, y) {
         x,
         y,
         protoPlant.speed,
-        Math.random() * 2 * Math.PI,
-        protoPlant.size,
-        protoPlant.reproduceRate,
-        protoPlant.reproduceChance,
-        protoPlant.wobbleAmt,
-        protoPlant.color
+        Math.random() * 2 * pi,
+        protoPlant.size
       )
     );
   }
@@ -624,7 +661,7 @@ export function createProtoFish(x, y, species, colorArr) {
     new fish(
       x,
       y,
-      Math.random() * 2 * Math.PI,
+      Math.random() * 2 * pi,
       newFish[species].spriteName,
       newFish[species].actionTime,
       newFish[species].maxSpeed,
@@ -637,6 +674,7 @@ export function createProtoFish(x, y, species, colorArr) {
       colorArr
     )
   );
+  console.log(fishArr[fishArr.length-1])
 }
 
 function determineOffspringStats(fish1, fish2){
