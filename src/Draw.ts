@@ -1,7 +1,7 @@
 import {mainGame, screenHeight, screenWidth} from "./SeacoScript";
 import {fishArr, plantsArr} from "./Objects";
 import {hover, canPlaceFish, placingFish, animationSpeed, mouseX, mouseY} from "./UI-management";
-import { Application, Sprite, Graphics, Container, Texture, filters, WRAP_MODES, Text, Loader} from 'pixi.js'
+import { Application, Sprite, Graphics, Container, Texture, filters, WRAP_MODES, Text, Loader, settings} from 'pixi.js'
 //import * as PIXI from "pixi.js"
 import { CRTFilter, AdjustmentFilter } from 'pixi-filters'
 
@@ -31,6 +31,9 @@ let adjustmentFilter;
 
 
 export function pixiInit() {
+
+  // prevents crash on some Firefox versions (https://github.com/pixijs/pixi.js/issues/7070)
+  settings.FAIL_IF_MAJOR_PERFORMANCE_CAVEAT = false;
 
   //Create a Pixi Application
     app = new Application({

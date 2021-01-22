@@ -1,4 +1,3 @@
-//import "./Home.html";
 import "./Style.css";
 import {updatePlants, updateFish, updateFrameCounter, fishArr, initialize, createPlants, createProtoFish} from "./Objects";
 import {random} from "./Math Functions";
