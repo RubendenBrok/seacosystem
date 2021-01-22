@@ -8,9 +8,9 @@
 </head>
 
 <style>
-  #loader {
+  #loader, #notouch {
     position: absolute;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
     color: rgb(220, 255, 200);
     width: 100vw;
     height: 100vh;
@@ -29,8 +29,13 @@
     animation-name: loadanimation;
     animation-duration: 2s;
     animation-iteration-count: infinite;
-    margin-top: 20%;
     font-size: 40px;
+  }
+
+  .flash, .sorry {
+    width: 50%;
+    margin: auto;
+    margin-top: 20%;
   }
 
   @keyframes loadanimation {
@@ -40,7 +45,7 @@
       }
     50% {
       opacity: 1;
-      text-shadow: 0px 0px 20px rgb(220, 255, 200);
+      text-shadow: 0px 0px 60px rgb(220, 255, 200);
       }
     100% {
       opacity: 0.1;
@@ -50,6 +55,7 @@
 </style>
 
 <body>
+  <div id = "notouch"> <h2 class = "sorry">Sorry, this App isn't suitable for touchscreen devices - try opening it on your laptop or computer!<h2></div>
   <div id = "loader"> <h1 class = "flash">LOADING<h1></div>
   <div id = "content">
   <div class = "popup" id = "intro">

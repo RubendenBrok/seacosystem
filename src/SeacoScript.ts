@@ -1,4 +1,3 @@
-
 //import "./Home.html";
 import "./Style.css";
 import {updatePlants, updateFish, updateFrameCounter, fishArr, initialize, createPlants, createProtoFish} from "./Objects";
@@ -13,12 +12,24 @@ export let screenWidth = window.innerWidth;
 export let screenHeight = window.innerHeight;
 
 
-window.addEventListener("load", ()=>{
-    document.getElementById("loader").style.display = "none"
-    document.getElementById("content").style.display = "block"
-})
+window.addEventListener("load", () => {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("content").style.display = "block";
 
-pixiInit();
+  if (isTouchDevice()) {
+    console.log("ja");
+    document.getElementById("content").style.display = "none";
+    document.getElementById("notouch").style.display = "block";
+  } else {
+    console.log("nee");
+    document.getElementById("notouch").style.display = "none";
+    document.getElementById("content").style.display = "block";
+  }
+});
+
+if (!isTouchDevice()) {
+  pixiInit();
+}
 
 export function mainGame() {
 
@@ -106,4 +117,10 @@ function InitializeGame(){
       [200,200,140]
     );
   }
+}
+
+function isTouchDevice() {
+  return (('ontouchstart' in window) ||
+     (navigator.maxTouchPoints > 0) ||
+     (navigator.msMaxTouchPoints > 0));
 }
