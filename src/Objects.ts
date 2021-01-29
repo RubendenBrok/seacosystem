@@ -41,12 +41,10 @@ export const plantsArr = [];
 export const fishArr = [];
 
 // arrays to keep track of the individual fishes, used to update behaviour
-const fish1Arr = [],
-  fish1LookingForMate = [],
-  fish2Arr = [],
-  fish2LookingForMate = [],
-  fish3Arr = [],
-  fish3LookingForMate = [];
+const herringArr = [],
+  herringLookingForMate = [],
+  codArr = [],
+  codLookingForMate = [];
 
 const animationData = [
   {
@@ -99,9 +97,9 @@ export const protoFish = [
     deadFXIndex: 1,
     loveFXIndex: 0,
     foodArr: plantsArr,
-    enemyArr: fish2Arr,
-    mateArr: fish1LookingForMate,
-    ownSpeciesArr: fish1Arr,
+    enemyArr: codArr,
+    mateArr: herringLookingForMate,
+    ownSpeciesArr: herringArr,
     mateTime: 50,
     eatTime: 10,
     hungerMultiplier: 1,
@@ -130,10 +128,10 @@ export const protoFish = [
     colorDepth: 100,
     deadFXIndex: 2,
     loveFXIndex: 0,
-    foodArr: fish1Arr,
-    enemyArr: fish3Arr,
-    mateArr: fish2LookingForMate,
-    ownSpeciesArr: fish2Arr,
+    foodArr: herringArr,
+    enemyArr: [],
+    mateArr: codLookingForMate,
+    ownSpeciesArr: codArr,
     mateTime: 80,
     eatTime: 20,
     hungerMultiplier: 0.4,
@@ -311,25 +309,23 @@ export function updatePlants() {
 //fish update cycle
 export function updateFish() {
   //reset all arrays containing individual fish catagories - they are used in fishBehaviour
-  fish1Arr.length = 0;
-  fish1LookingForMate.length = 0;
-  fish2Arr.length = 0;
-  fish2LookingForMate.length = 0;
-  fish3Arr.length = 0;
-  fish3LookingForMate.length = 0;
+  herringArr.length = 0;
+  herringLookingForMate.length = 0;
+  codArr.length = 0;
+  codLookingForMate.length = 0;
 
   fishArr.forEach((fish) => {
     switch (fish.species) {
       case 0:
-        fish1Arr.push(fish);
+        herringArr.push(fish);
         if (fish.currentBehaviour === behaviourEnum.LOOKINGFORMATE) {
-          fish1LookingForMate.push(fish);
+          herringLookingForMate.push(fish);
         }
         break;
       case 1:
-        fish2Arr.push(fish);
+        codArr.push(fish);
         if (fish.currentBehaviour === behaviourEnum.LOOKINGFORMATE) {
-          fish2LookingForMate.push(fish);
+          codLookingForMate.push(fish);
         }
         break;
     }
